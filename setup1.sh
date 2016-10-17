@@ -14,7 +14,7 @@ source ~/tensorflow/bin/activate
 
 #python data sci. libs
 sudo apt-get --assume-yes install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
-pip install -U scikit-learn
+sudo pip install -U scikit-learn
 
 #install tensorflow
 #tensorflow v0.11
