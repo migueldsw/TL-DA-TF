@@ -1,9 +1,17 @@
 #################
 ##MLP in TensorFlow
-
 from __future__ import print_function
 
+import os
+def checkDir(directory):
+	if not os.path.exists(directory):
+		os.makedirs(directory)
+checkDir('./data')
+checkDir('./out')
+checkDir('./save')
+
 # Import MNIST data
+print("Download MNIST dataset...")
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("./data/", one_hot=True)
 
