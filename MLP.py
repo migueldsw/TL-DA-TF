@@ -5,7 +5,7 @@ from __future__ import print_function
 
 # Import MNIST data
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("/data/", one_hot=True)
+mnist = input_data.read_data_sets("./data/", one_hot=True)
 
 import tensorflow as tf
 
@@ -19,7 +19,7 @@ display_step = 1
 n_hidden_1 = 128 # 1st layer number of features
 n_hidden_2 = 128 # 2nd layer number of features
 n_input = 784 # MNIST data input (img shape: 28*28)
-n_classes = 10 # MNIST total classes (0-9 digits)
+n_classes = 20 # MNIST total classes (0-9 digits)
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_input])
