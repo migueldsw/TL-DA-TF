@@ -11,7 +11,7 @@ import tensorflow as tf
 
 # Parameters
 learning_rate = 0.001
-training_epochs = 20
+training_epochs = 10
 batch_size = 100
 display_step = 1
 
@@ -31,7 +31,7 @@ def MLP(x, weights, biases):
     # 1st Hidden layer with RELU activation
     layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
     layer1 = tf.nn.relu(layer1)
-    # 2st Hidden layer with RELU activation
+    # 2nd Hidden layer with RELU activation
     layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
     layer2 = tf.nn.relu(layer2)
     # Output layer with linear activation
@@ -40,14 +40,14 @@ def MLP(x, weights, biases):
 
 # Store layers weight & bias
 weights = {
-    'h1': tf.Variable(tf.random_normal([n_input, n_hidden_1])),
-    'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2])),
-    'out': tf.Variable(tf.random_normal([n_hidden_2, n_classes]))
+    'h1': tf.Variable(tf.random_normal([n_input, n_hidden_1]), name = 'h1'),
+    'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2]), name = 'h2'),
+    'out': tf.Variable(tf.random_normal([n_hidden_2, n_classes]), name = 'h-out')
 }
 biases = {
-    'b1': tf.Variable(tf.random_normal([n_hidden_1])),
-    'b2': tf.Variable(tf.random_normal([n_hidden_2])),
-    'out': tf.Variable(tf.random_normal([n_classes]))
+    'b1': tf.Variable(tf.random_normal([n_hidden_1]), name = 'b1'),
+    'b2': tf.Variable(tf.random_normal([n_hidden_2]), name = 'b2'),
+    'out': tf.Variable(tf.random_normal([n_classes]), name = 'b-out')
 }
 
 # Construct model
@@ -59,6 +59,9 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Initializing the variables
 init = tf.initialize_all_variables()
+
+# 'saver' to save (and load) all the variables
+saver = tf.train.Saver()
 
 # Launch the graph
 with tf.Session() as sess:
@@ -81,6 +84,11 @@ with tf.Session() as sess:
             print("Epoch:", '%04d' % (epoch+1), "cost=", \
                 "{:.9f}".format(avg_cost))
     print("Optimization Finished!")
+
+    # Save the variables to disk
+    save_path = saver.save(sess, "./save/MLP.ckpt")
+    print("MLP saved in file: %s" % save_path)
+
 
     # Test model
     correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
