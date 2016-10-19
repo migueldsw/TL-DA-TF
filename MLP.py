@@ -11,7 +11,7 @@ import tensorflow as tf
 
 # Parameters
 learning_rate = 0.001
-training_epochs = 10
+training_epochs = 20
 batch_size = 100
 display_step = 1
 
@@ -19,7 +19,7 @@ display_step = 1
 n_hidden_1 = 128 # 1st layer number of features
 n_hidden_2 = 128 # 2nd layer number of features
 n_input = 784 # MNIST data input (img shape: 28*28)
-n_classes = 20 # MNIST total classes (0-9 digits)
+n_classes = 10 # MNIST total classes (0-9 digits)
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_input])
