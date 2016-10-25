@@ -97,4 +97,5 @@ save/
 #vgg files
 VGG16/laska.png
 VGG16/vgg16_weights.npz
+VGG16/17flowers/
 
