@@ -20,23 +20,23 @@ sudo pip install tflearn
 #install tensorflow
 #obs.: # GPU Requires CUDA toolkit 7.5 and CuDNN v5.
 #tensorflow v0.11
-if [ $1 == '0.11' ] && [ $2 == 'gpu' ]
+if [ $1 == '0.11' ] && [ $2 == 'gpu' ];
 	then
 	#GPU - CUDA: 
 	export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.11.0rc0-cp27-none-linux_x86_64.whl
 	echo "Will install TensorFlow v0.11 GPU"
-elif [ $1 == '0.11' ] && [ $2 == 'cpu' ]
+elif [ $1 == '0.11' ] && [ $2 == 'cpu' ];
 	then
 	#CPU:
 	export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.11.0rc0-cp27-none-linux_x86_64.whl
 	echo "Will install TensorFlow v0.11 CPU"
 #tensorflow v0.10
-elif [ $1 == '0.10' ] && [ $2 == 'cpu' ]
+elif [ $1 == '0.10' ] && [ $2 == 'cpu' ];
 	then
 	#CPU:
 	export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0-cp27-none-linux_x86_64.whl
 	echo "Will install TensorFlow v0.10 CPU"
-elif [ $1 == '0.10' ] && [ $2 == 'gpu' ]
+elif [ $1 == '0.10' ] && [ $2 == 'gpu' ];
 	then
 	#GPU:
 	export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.10.0-cp27-none-linux_x86_64.whl
