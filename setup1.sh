@@ -54,9 +54,9 @@ if [ $1 = 'tflearn' ];
 	then
 	#the bleeding edge tflearn version:
 	echo "Will install git tflearn version"
-	sudo pip install git+https://github.com/tflearn/tflearn.git
+	sudo pip install --upgrade git+https://github.com/tflearn/tflearn.git
 else
 	#the latest tflearn stable version:
 	echo "Will install tflearn stable version"
-	sudo pip install tflearn
+	sudo pip install --upgrade tflearn
 fi
