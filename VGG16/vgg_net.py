@@ -25,7 +25,10 @@ X, Y, testX, testY = mnist.load_data(one_hot=True)
 
 
 # Building 'VGG Network'
-network = input_data(shape=[None, 224, 224, 3])
+# for oxflower17
+# network = input_data(shape=[None, 224, 224, 3])
+# for mnist
+network = input_data(shape=[None, 32, 784])
 
 network = conv_2d(network, 64, 3, activation='relu')
 network = conv_2d(network, 64, 3, activation='relu')
