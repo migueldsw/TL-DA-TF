@@ -18,8 +18,11 @@ from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.estimator import regression
 
 # Data loading and preprocessing
-import tflearn.datasets.oxflower17 as oxflower17
-X, Y = oxflower17.load_data(one_hot=True)
+#import tflearn.datasets.oxflower17 as oxflower17
+#X, Y = oxflower17.load_data(one_hot=True)
+import tflearn.datasets.mnist as mnist
+X, Y, testX, testY = mnist.load_data(one_hot=True)
+
 
 # Building 'VGG Network'
 network = input_data(shape=[None, 224, 224, 3])
@@ -63,3 +66,7 @@ model = tflearn.DNN(network, checkpoint_path='model_vgg',
 model.fit(X, Y, n_epoch=500, shuffle=True,
           show_metric=True, batch_size=32, snapshot_step=500,
           snapshot_epoch=False, run_id='vgg_oxflowers17')
+
+# Evaluate accuracy.
+accuracy_score = model.evaluate(x=testX,y=testY)["accuracy"]
+print('Accuracy: {0:f}'.format(accuracy_score))
