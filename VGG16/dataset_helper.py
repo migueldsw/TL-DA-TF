@@ -48,4 +48,6 @@ def get_small_oxf17(instances):
 	testX, testY = fX[val:], fY[val:]
 	x, y = small_set(trainX, trainY,instances,17)
 	tx, ty = small_set(testX,testY,instances/17,17)
+	if (len(tx)<1):
+		tx, ty = testX[-3:], testY[-3:]
 	return x, y, tx, ty
