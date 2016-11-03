@@ -38,6 +38,8 @@ def get_small_mnist(instances):
 	X, Y, testX, testY = mnist.load_data(one_hot=True)
 	x, y = small_set(X,Y,instances,10)
 	tx, ty = small_set(testX,testY,instances/10,10)
+	if (len(tx)<1):
+		tx, ty = testX[-3:], testY[-3:]
 	return x, y, tx, ty
 
 def get_small_oxf17(instances):
