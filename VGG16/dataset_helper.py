@@ -40,3 +40,12 @@ def get_small_mnist(instances):
 	tx, ty = small_set(testX,testY,instances/10,10)
 	return x, y, tx, ty
 
+def get_small_oxf17(instances):
+	import tflearn.datasets.oxflower17 as oxflower17
+	fX, fY = oxflower17.load_data(one_hot=True)
+	val = 136
+	trainX, trainY = fX[:val], fY[:val]
+	testX, testY = fX[val:], fY[val:]
+	x, y = small_set(trainX, trainY,instances,17)
+	tx, ty = small_set(testX,testY,instances/17,17)
+	return x, y, tx, ty

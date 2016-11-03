@@ -18,17 +18,19 @@ from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.estimator import regression
 
 # Data loading and preprocessing
-#import tflearn.datasets.oxflower17 as oxflower17
-#X, Y = oxflower17.load_data(one_hot=True)
-import tflearn.datasets.mnist as mnist
-X, Y, testX, testY = mnist.load_data(one_hot=True)
-
+# import tflearn.datasets.oxflower17 as oxflower17
+# X, Y = oxflower17.load_data(one_hot=True)
+# import tflearn.datasets.mnist as mnist
+# X, Y, testX, testY = mnist.load_data(one_hot=True)
+#
+# from dataset_helper import get_small_mnist
+# X, Y, testX, testY = get_small_mnist(100)
+from dataset_helper import get_small_oxf17
+X, Y, testX, testY = get_small_oxf17(17)
+print ("Small dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
 
 # Building 'VGG Network'
-# for oxflower17
-# network = input_data(shape=[None, 224, 224, 3])
-# for mnist
-network = input_data(shape=[None, 32, 784])
+network = input_data(shape=[None, 224, 224, 3])
 
 network = conv_2d(network, 64, 3, activation='relu')
 network = conv_2d(network, 64, 3, activation='relu')
@@ -66,8 +68,8 @@ network = regression(network, optimizer='rmsprop',
 # Training
 model = tflearn.DNN(network, checkpoint_path='model_vgg',
                     max_checkpoints=1, tensorboard_verbose=0)
-model.fit(X, Y, n_epoch=500, shuffle=True,
-          show_metric=True, batch_size=32, snapshot_step=500,
+model.fit(X, Y, n_epoch=10, shuffle=True,
+          show_metric=True, batch_size=3, snapshot_step=500,
           snapshot_epoch=False, run_id='vgg_oxflowers17')
 
 # Evaluate accuracy.
