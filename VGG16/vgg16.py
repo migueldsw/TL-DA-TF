@@ -264,10 +264,9 @@ if __name__ == '__main__':
     X, Y, testX, testY = get_small_oxf17(1000)
 
     #predict and test
-    #prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [img1]})[0]
-    #preds = (np.argsort(prob)[::-1])[0:5]
-    #for p in preds:
-    #    print class_names[p], prob[p]
-    print 'Accuracy evaluation for oxflower17'
-    accuracy_score = vgg.evaluate(X,Y,batch_size=3)
-    print(accuracy_score)
+    prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [X[0]]})[0]
+    preds = (np.argsort(prob)[::-1])[0:5]
+    for p in preds:
+        print class_names[p], prob[p]
+    #print 'Accuracy evaluation for oxflower17'
+    #print("test accuracy %g"%vgg.probs.eval(feed_dict={vgg.imgs: X,}))
