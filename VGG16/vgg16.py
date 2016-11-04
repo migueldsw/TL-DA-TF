@@ -257,10 +257,17 @@ if __name__ == '__main__':
     imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
     vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
 
-    img1 = imread('laska.png', mode='RGB')
-    img1 = imresize(img1, (224, 224))
+    #input read
+    #img1 = imread('laska.png', mode='RGB')
+    #img1 = imresize(img1, (224, 224))
+    from dataset_helper import get_small_oxf17
+    X, Y, testX, testY = get_small_oxf17(1000)
 
-    prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [img1]})[0]
-    preds = (np.argsort(prob)[::-1])[0:5]
-    for p in preds:
-        print class_names[p], prob[p]
+    #predict and test
+    #prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [img1]})[0]
+    #preds = (np.argsort(prob)[::-1])[0:5]
+    #for p in preds:
+    #    print class_names[p], prob[p]
+    print 'Accuracy evaluation for oxflower17'
+    accuracy_score = vgg.evaluate(X,Y,batch_size=3)
+    print(accuracy_score)
