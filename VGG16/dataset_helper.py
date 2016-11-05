@@ -58,3 +58,18 @@ def see_image(data):
 	from matplotlib import pyplot as plt
 	plt.imshow(data, interpolation='nearest')
 	plt.show()
+
+def include_RGB_layers(img):
+	#reshapes the input img from 28x28x1 to 28x28x3
+	out = np.zeros(28*28*3).reshape(28,28,3)
+	for i in range(28):
+		for j in range(28):
+			out[i,j] = np.ones(3)*img[i,j,0]
+	return out
+
+def include_RBG_in_set(X):
+	#reshapes de input set X from Nx28x28x1 to Nx28x28x3
+	out = np.zeros(np.prod(X.shape[:-1]+(3,))).reshape(X.shape[:-1]+(3,))
+	for i in range(len(X)):
+		out[i] = include_RGB_layers(X[i])
+	return out
