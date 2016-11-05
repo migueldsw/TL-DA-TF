@@ -66,9 +66,9 @@ network = regression(network, optimizer='rmsprop',
 # Training
 model = tflearn.DNN(network, checkpoint_path='model_vgg_2',
                     max_checkpoints=1, tensorboard_verbose=0)
-model.fit(X, Y, n_epoch=100, shuffle=True,
+model.fit(X, Y, n_epoch=20, shuffle=True,
           show_metric=True, batch_size=32, snapshot_step=500,
-          snapshot_epoch=True, run_id='vgg_mnist_full_2')
+          snapshot_epoch=True, run_id='vgg_mnist_full_2',validation_set=0.1)
 
 # Evaluate accuracy.
 accuracy_score = model.evaluate(testX,testY,batch_size=32)
