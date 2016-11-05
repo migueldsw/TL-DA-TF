@@ -53,3 +53,8 @@ def get_small_oxf17(instances):
 	if (len(tx)<1):
 		tx, ty = testX[-3:], testY[-3:]
 	return x, y, tx, ty
+
+def see_image(data):
+	from matplotlib import pyplot as plt
+	plt.imshow(data, interpolation='nearest')
+	plt.show()
