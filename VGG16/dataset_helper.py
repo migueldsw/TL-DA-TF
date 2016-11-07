@@ -4,11 +4,6 @@
 import tflearn
 import numpy as np
 
-# import tflearn.datasets.mnist as mnist
-# X, Y, testX, testY = mnist.load_data(one_hot=True)
-
-#reshape a from 784x1 to 28x28
-#a = a.reshape(28,28)
 
 def label_of(one_hot_vector):
 	return one_hot_vector.argmax()
@@ -33,22 +28,41 @@ def small_set(X,Y,instances,classes):
 		nY.append(Y[i])
 	return np.array(nX), np.array(nY)
 
-def get_small_mnist(instances):
+def get_mnist(instances = None, rgb = False, see = False):
 	import tflearn.datasets.mnist as mnist
 	X, Y, testX, testY = mnist.load_data(one_hot=True)
-	x, y = small_set(X,Y,instances,10)
-	tx, ty = small_set(testX,testY,instances/10,10)
-	if (len(tx)<1):
-		tx, ty = testX[-3:], testY[-3:]
+	X = X.reshape(len(X),28,28,1)
+	testX = testX.reshape(len(testX),28,28,1)
+	x, y, tx, ty = X, Y, testX, testY
+	if (instances):
+		x, y = small_set(X,Y,instances,10)
+		tx, ty = small_set(testX,testY,instances/10,10)
+		if (len(tx)<1):
+			tx, ty = testX[-3:], testY[-3:]
+	if (rgb): 
+		#include the RGB layers in sets
+		[x, tx] = map(include_RBG_in_set,[x, tx])
+	if (see):
+		see_image(x[0])
 	return x, y, tx, ty
 
-def get_small_svhn(instances):
-	import tflearn.datasets.svhn as svhn
-	X, Y, testX, testY = svhn.load_data(one_hot=True)
-	x, y = small_set(X,Y,instances,10)
-	tx, ty = small_set(testX,testY,instances/10,10)
-	if (len(tx)<1):
-		tx, ty = testX[-3:], testY[-3:]
+def get_svhn(instances = None, crop = False, see = False):
+	#WAITING PULL REQUEST#import tflearn.datasets.svhn as svhn
+	#X, Y, testX, testY = svhn.load_data(one_hot=True)
+	from svhn import load_data
+	X, Y, testX, testY = load_data(one_hot=True)
+	#
+	x, y, tx, ty = X, Y, testX, testY
+	if (instances):
+		x, y = small_set(X,Y,instances,10)
+		tx, ty = small_set(testX,testY,instances/10,10)
+		if (len(tx)<1):
+			tx, ty = testX[-3:], testY[-3:]
+	if (crop): 
+		#crop images in output sets
+		[x, tx] = map(crop_images_in_set,[x, tx])
+	if (see):
+		see_image(x[0])
 	return x, y, tx, ty
 
 def get_small_oxf17(instances):
@@ -98,3 +112,12 @@ def crop_images_in_set(X):
 	for i in range(len(X)):
 		nX[i] = crop_img(X[i])
 	return nX
+
+#####TEST AREA
+
+# a, b ,c ,d = get_mnist(instances = 10,rgb=True,see=True)
+# e,f,g,h = get_svhn(instances = 10, crop=True, see=True)
+
+# print('shapes:')
+# for i in ([a,b,c,d,e,f,g,h]):
+# 	 print i.shape
