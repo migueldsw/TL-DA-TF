@@ -47,11 +47,8 @@ def get_mnist(instances = None, rgb = False, see = False):
 	return x, y, tx, ty
 
 def get_svhn(instances = None, crop = False, see = False):
-	#WAITING PULL REQUEST#import tflearn.datasets.svhn as svhn
-	#X, Y, testX, testY = svhn.load_data(one_hot=True)
-	from svhn import load_data
-	X, Y, testX, testY = load_data(one_hot=True)
-	#
+	import tflearn.datasets.svhn as svhn
+	X, Y, testX, testY = svhn.load_data(one_hot=True)
 	x, y, tx, ty = X, Y, testX, testY
 	if (instances):
 		x, y = small_set(X,Y,instances,10)
@@ -63,18 +60,6 @@ def get_svhn(instances = None, crop = False, see = False):
 		[x, tx] = map(crop_images_in_set,[x, tx])
 	if (see):
 		see_image(x[0])
-	return x, y, tx, ty
-
-def get_small_oxf17(instances):
-	import tflearn.datasets.oxflower17 as oxflower17
-	fX, fY = oxflower17.load_data(one_hot=True)
-	val = 136
-	trainX, trainY = fX[:val], fY[:val]
-	testX, testY = fX[val:], fY[val:]
-	x, y = small_set(trainX, trainY,instances,17)
-	tx, ty = small_set(testX,testY,instances/17,17)
-	if (len(tx)<1):
-		tx, ty = testX[-3:], testY[-3:]
 	return x, y, tx, ty
 
 def see_image(data):

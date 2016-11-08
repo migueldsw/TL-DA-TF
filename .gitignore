@@ -105,3 +105,5 @@ VGG16/mnist/
 svhn/
 VGG16/svhn/
 
+#apple
+.DS_Store

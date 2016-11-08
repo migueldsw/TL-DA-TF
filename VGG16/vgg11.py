@@ -1,8 +1,8 @@
 #from tflearn examples: https://github.com/tflearn/tflearn/blob/master/examples/images/vgg_network.py
 
 """ Very Deep Convolutional Networks for Large-Scale Visual Recognition.
-Applying VGG 16-layers convolutional network to Oxford's 17 Category Flower
-Dataset classification task.
+Applying VGG 11-layers convolutional network to MNIST and SVHN
+Dataset classification task. 28x28x3 shape 
 References:
     Very Deep Convolutional Networks for Large-Scale Image Recognition.
     K. Simonyan, A. Zisserman. arXiv technical report, 2014.
@@ -28,28 +28,23 @@ X, Y, testX, testY = get_mnist(rgb=True)
 # X, Y, testX, testY = get_svhn(instances=10, crop=True)
 #
 
-# Building 'VGG Network'
+# Building 'VGG-11 Network'
 network = input_data(shape=[None, 28, 28, 3])
 
 network = conv_2d(network, 8, 3, activation='relu')
-network = conv_2d(network, 8, 3, activation='relu')
 network = max_pool_2d(network, 2, strides=2)
 
 network = conv_2d(network, 16, 3, activation='relu')
-network = conv_2d(network, 16, 3, activation='relu')
 network = max_pool_2d(network, 2, strides=2)
 
 network = conv_2d(network, 32, 3, activation='relu')
 network = conv_2d(network, 32, 3, activation='relu')
-network = conv_2d(network, 32, 3, activation='relu')
 network = max_pool_2d(network, 2, strides=2)
 
 network = conv_2d(network, 64, 3, activation='relu')
 network = conv_2d(network, 64, 3, activation='relu')
-network = conv_2d(network, 64, 3, activation='relu')
 network = max_pool_2d(network, 2, strides=2)
 
-network = conv_2d(network, 64, 3, activation='relu')
 network = conv_2d(network, 64, 3, activation='relu')
 network = conv_2d(network, 64, 3, activation='relu')
 network = max_pool_2d(network, 2, strides=2)
@@ -79,14 +74,14 @@ def getCrono(): # returns delta t in seconds
 startCrono()
 
 # Training
-print ("Training VGG-16...")
+print ("Training VGG-11...")
 EPOCHS = 50
 
-model = tflearn.DNN(network, checkpoint_path='model_vgg_3',
+model = tflearn.DNN(network, checkpoint_path='model_vgg11_1',
                     max_checkpoints=1, tensorboard_verbose=0)
 model.fit(X, Y, n_epoch=EPOCHS, shuffle=True,
           show_metric=True, batch_size=32, snapshot_step=500,
-          snapshot_epoch=True, run_id='vgg_mnist_full_3',validation_set=0.0)
+          snapshot_epoch=True, run_id='vgg_11_full_1',validation_set=0.0)
 
 print ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
 print ("Training completed in %d s"%(getCrono()))
