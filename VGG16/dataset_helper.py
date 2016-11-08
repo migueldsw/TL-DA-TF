@@ -62,6 +62,17 @@ def get_svhn(instances = None, crop = False, see = False):
 		see_image(x[0])
 	return x, y, tx, ty
 
+def get_svhn_extra(crop = False, see = False):
+	import tflearn.datasets.svhn as svhn
+	X, Y, testX, testY = svhn.load_data(one_hot=True)
+	X, Y= svhn.load_extra_data(one_hot=True)
+	x, y, tx, ty = X, Y, testX, testY
+	if (crop): 
+		[x, tx] = map(crop_images_in_set,[x, tx])
+	if (see):
+		see_image(x[0])
+	return x, y, tx, ty
+
 def see_image(data):
 	from matplotlib import pyplot as plt
 	plt.imshow(data, interpolation='nearest')
