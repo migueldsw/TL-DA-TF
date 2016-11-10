@@ -84,6 +84,10 @@ model.fit(X, Y, n_epoch=EPOCHS, shuffle=True,
           snapshot_epoch=True, run_id='vgg_11_full_1',validation_set=0.0)
 
 # Save the model
+def checkDir(directory):
+  if not os.path.exists(directory):
+    os.makedirs(directory)
+checkDir('./models/')
 model.save('./models/vgg11-model1.tfl')
 print ('Model SAVED!')
 
