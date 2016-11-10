@@ -66,13 +66,15 @@ model = tflearn.DNN(regression, checkpoint_path='vgg-finetuning',
                     max_checkpoints=3, tensorboard_verbose=2,
                     tensorboard_dir="./logs")
 
+# Load model weights
+print ('Loading model...')
 model_file = os.path.join(model_path, "vgg16-model1.tfl")
 model.load(model_file, weights_only=True)
 
 # Start finetuning
-model.fit(X, Y, n_epoch=EPOCH, validation_set=0.1, shuffle=True,
+model.fit(X, Y, n_epoch=EPOCH, validation_set=0.0, shuffle=True,
           show_metric=True, batch_size=64, snapshot_epoch=False,
-          snapshot_step=200, run_id='vgg-finetuning')
+          snapshot_step=200, run_id='vgg16-finetuning')
 
 # Save the model
 model.save('./models/vgg16-retrained-1')
