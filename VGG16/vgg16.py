@@ -16,6 +16,8 @@ import tflearn
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.estimator import regression
+import os
+
 
 # Data loading and preprocessing
 print ("Data loading and preprocessing...")
@@ -80,7 +82,7 @@ startCrono()
 
 # Training
 print ("Training VGG-16...")
-EPOCHS = 50
+EPOCHS = 2
 
 model = tflearn.DNN(network, checkpoint_path='model_vgg16_4',
                     max_checkpoints=1, tensorboard_verbose=0)
