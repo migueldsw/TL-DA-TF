@@ -30,6 +30,10 @@ X, Y, testX, testY = get_mnist(rgb=True)
 # X, Y, testX, testY = get_svhn(instances=10, crop=True)
 #
 
+#Values
+LEARNING_RATE = 0.0001
+EPOCHS = 2
+
 # Building 'VGG-16 Network'
 network = input_data(shape=[None, 28, 28, 3], name='input')
 
@@ -64,36 +68,39 @@ network = fully_connected(network, 10, activation='softmax', scope='fc8')
 
 network = regression(network, optimizer='rmsprop',
                      loss='categorical_crossentropy',
-                     learning_rate=0.001)
+                     learning_rate=LEARNING_RATE)
 
 #-----------------
 #time cost evaluation
 from datetime import datetime as dt
 TIME = [] #[t_init,t_final]
 def startCrono():
-	TIME.append(dt.now())
+    TIME.append(dt.now())
 def getCrono(): # returns delta t in seconds
-	TIME.append(dt.now())
-	deltat = TIME[-1]-TIME[-2]
-	return deltat.seconds
+    TIME.append(dt.now())
+    deltat = TIME[-1]-TIME[-2]
+    return deltat.seconds
+def checkDir(directory):
+  if not os.path.exists(directory):
+    os.makedirs(directory)
 #----------------
 
 startCrono()
 
 # Training
 print ("Training VGG-16...")
-EPOCHS = 2
 
-model = tflearn.DNN(network, checkpoint_path='model_vgg16_4',
-                    max_checkpoints=1, tensorboard_verbose=0)
+
+checkDir('checkpoints/model_vgg16')
+checkDir('tensorboard/vgg16')
+model = tflearn.DNN(network, checkpoint_path='~checkpoints/model_vgg16',
+                    max_checkpoints=1, tensorboard_verbose=2, 
+                    tensorboard_dir="tensorboard/vgg16")
 model.fit(X, Y, n_epoch=EPOCHS, shuffle=True,
           show_metric=True, batch_size=32, snapshot_step=500,
           snapshot_epoch=True, run_id='vgg_16_full_4',validation_set=0.0)
 
 # Save the model
-def checkDir(directory):
-  if not os.path.exists(directory):
-    os.makedirs(directory)
 checkDir('./models/')
 model.save('./models/vgg16-model1.tfl')
 print ('Model SAVED!')

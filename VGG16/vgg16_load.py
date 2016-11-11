@@ -11,7 +11,7 @@ import os
 def vgg16(input, num_class):
 
     x = tflearn.conv_2d(input, 8, 3, activation='relu', scope='conv1_1')
-    x = tflearn.conv_2d(input, 8, 3, activation='relu', scope='conv1_2')
+    x = tflearn.conv_2d(x, 8, 3, activation='relu', scope='conv1_2')
     x = tflearn.max_pool_2d(x, 2, strides=2, name='maxpool1')
 
     x = tflearn.conv_2d(x, 16, 3, activation='relu', scope='conv2_1')
@@ -43,7 +43,22 @@ def vgg16(input, num_class):
 
     return x
 
-
+#-----------------
+#time cost evaluation
+from datetime import datetime as dt
+TIME = [] #[t_init,t_final]
+def startCrono():
+    TIME.append(dt.now())
+def getCrono(): # returns delta t in seconds
+    TIME.append(dt.now())
+    deltat = TIME[-1]-TIME[-2]
+    return deltat.seconds
+def checkDir(directory):
+  if not os.path.exists(directory):
+    os.makedirs(directory)
+#----------------
+checkDir('checkpoints/vgg16-finetuning')
+checkDir('tensorboard/vgg16_load')
 model_path = "./models/"
 
 from dataset_helper import get_mnist
@@ -62,9 +77,9 @@ regression = tflearn.regression(softmax, optimizer='rmsprop',
                                 loss='categorical_crossentropy',
                                 learning_rate=LEARNING_RATE, restore=False)
 
-model = tflearn.DNN(regression, checkpoint_path='vgg-finetuning',
+model = tflearn.DNN(regression, checkpoint_path='checkpoints/vgg16-finetuning',
                     max_checkpoints=3, tensorboard_verbose=2,
-                    tensorboard_dir="./logs")
+                    tensorboard_dir="tensorboard/vgg16_load")
 
 # Load model weights
 print ('Loading model...')

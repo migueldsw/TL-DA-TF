@@ -59,7 +59,7 @@ regression = tflearn.regression(softmax, optimizer='rmsprop',
 
 model = tflearn.DNN(regression, checkpoint_path='vgg-finetuning',
                     max_checkpoints=3, tensorboard_verbose=2,
-                    tensorboard_dir="./logs")
+                    tensorboard_dir="./logs/vgg11")
 
 # Load model weights
 print ('Loading model...')

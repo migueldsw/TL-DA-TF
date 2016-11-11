@@ -104,6 +104,7 @@ VGG16/mnist/
 17flowers/
 svhn/
 VGG16/svhn/
+VGG16/models/
 
 #apple
 .DS_Store
