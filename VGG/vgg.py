@@ -115,11 +115,3 @@ def evaluate_vgg(model,testX,testY):
 	accuracy_score = model.evaluate(testX,testY,batch_size=32)
 	print('Accuracy: %s' %accuracy_score)
 	return accuracy_score
-
-def test(ok):
-	print ('test ok')
-	return ok
-
-def test2(ok):
-	print ('test ok 4')
-	return ok+1

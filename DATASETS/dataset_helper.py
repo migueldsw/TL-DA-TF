@@ -108,12 +108,3 @@ def crop_images_in_set(X):
 	for i in range(len(X)):
 		nX[i] = crop_img(X[i])
 	return nX
-
-#####TEST AREA
-
-# a, b ,c ,d = get_mnist(instances = 10,rgb=True,see=True)
-# e,f,g,h = get_svhn(instances = 10, crop=True, see=True)
-
-# print('shapes:')
-# for i in ([a,b,c,d,e,f,g,h]):
-# 	 print i.shape

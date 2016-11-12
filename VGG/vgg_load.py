@@ -73,7 +73,8 @@ def vgg16(input, num_class):
 
     return network
 
-def load_vgg16(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,tensorboard_dir):
+def load_vgg(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,tensorboard_dir):
+	NUM_CLASSES = 10
 	# VGG Network
 	if (vggnet == 11):
 		mvggnet = vgg11
@@ -81,11 +82,11 @@ def load_vgg16(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,t
 		mvggnet = vgg16
 	input_layer = input_data(shape=[None, 28, 28, 3], name='input')
 	softmax = mvggnet(input_layer, NUM_CLASSES)
-	regression = regression(softmax, optimizer='rmsprop',
+	regress_l = regression(softmax, optimizer='rmsprop',
 	                                loss='categorical_crossentropy',
 	                                learning_rate=learning_rate, 
 	                                restore=False)
-	model = tflearn.DNN(regression, checkpoint_path=checkpoint_path,
+	model = tflearn.DNN(regress_l, checkpoint_path=checkpoint_path,
 	                    max_checkpoints=3, tensorboard_verbose=2,
 	                    tensorboard_dir=tensorboard_dir)
 	# Load model weights
@@ -104,9 +105,3 @@ def transfer_vgg(model,X,Y,epoch,run_id,save_path_file):
 	model.save(save_path_file)
 	print ('Model SAVED!')
 	return model
-
-def evaluate_vgg(model,testX,testY):
-	# Evaluate accuracy.
-	accuracy_score = model.evaluate(testX,testY,batch_size=32)
-	print('Accuracy: %s' %accuracy_score)
-	return accuracy_score

@@ -93,18 +93,21 @@ ENV/
 data/
 out/
 save/
+checkpoints/
+tensorboard/
+mnist/
+svhn/
+17flowers/
 
 #vgg files
 VGG16/laska.png
 VGG16/vgg16_weights.npz
 VGG16/17flowers/
 #dataset dirs
-mnist/
 VGG16/mnist/
-17flowers/
-svhn/
 VGG16/svhn/
 VGG16/models/
+models/
 
 #apple
 .DS_Store
