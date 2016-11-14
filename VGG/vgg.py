@@ -90,7 +90,7 @@ def build_vgg11(LEARNING_RATE):
 
 def train_vgg(network,X,Y,epochs,save_path_file,runId,checkpt_path,tensorboard_dir):
 	# Training the model
-	print ("Training VGG-16...")
+	print ("Training VGG...")
 	model = tflearn.DNN(network, 
 		checkpoint_path=checkpt_path,
 		max_checkpoints=1, 
@@ -109,9 +109,3 @@ def train_vgg(network,X,Y,epochs,save_path_file,runId,checkpt_path,tensorboard_d
 	model.save(save_path_file)
 	print ('Model SAVED!')
 	return model
-
-def evaluate_vgg(model,testX,testY):
-	# Evaluate accuracy.
-	accuracy_score = model.evaluate(testX,testY,batch_size=32)
-	print('Accuracy: %s' %accuracy_score)
-	return accuracy_score
