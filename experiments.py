@@ -5,7 +5,8 @@ import tflearn
 import os
 import sys
 import tensorflow as tf
-from VGG.vgg import build_vgg16, build_vgg11, train_vgg, evaluate_vgg
+from VGG.vgg import build_vgg16, build_vgg11, train_vgg
+from VGG.model_helper import evaluate_model, train_model
 from VGG.vgg_load import load_vgg, transfer_vgg
 from DATASETS.dataset_helper import get_mnist, get_svhn
 from report import appendFile, checkDir
@@ -23,36 +24,45 @@ def getCrono(): # returns delta t in seconds
 #----------------
 
 REPORT_LOG_FILE_NAME = 'run.log'
-def report(line):
+def report_line(line):
 	appendFile(REPORT_LOG_FILE_NAME,[line])
 
 # Data loading and preprocessing
 print ("Data loading and preprocessing...")
 
-X, Y, testX, testY = get_mnist(instances=100, rgb=True)
+X, Y, testX, testY = get_mnist(instances=1000, rgb=True)
 # X, Y, testX, testY = get_mnist(rgb=True)
 
 
-checkDir('models/')
-checkDir('checkpoints/')
-checkDir('tensorboard/')
-# checkDir('checkpoints/model_vgg11')
-# checkDir('tensorboard/vgg11')
-# checkDir('checkpoints/model_vgg11_retrain')
-# checkDir('tensorboard/vgg11_retrain')
+MODEL_PATH = './models/'
+CHECKPOINT_PATH = 'checkpoints/'
+TENSORBOARDDIR = 'tensorboard/'
+checkDir(MODEL_PATH)
+checkDir(CHECKPOINT_PATH)
+checkDir(TENSORBOARDDIR)
+
+def report(RUN_ID, X,testX,t,EPOCHS, LEARN_RATE, acc):
+	strs = []
+	strs.append ('ID: '+RUN_ID)
+	strs.append ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
+	strs.append ("Training completed in %d s"%(t))
+	strs.append ('Epochs: %d'%EPOCHS)
+	strs.append ('Learning rate: %f'%LEARN_RATE)
+	strs.append (acc)
+	strs.append ('\n')
+	for i in strs:
+		print(i)
+		report_line(i)
 
 def train_exec():
 	startCrono()
 
 	# Training
 	LEARN_RATE = 0.00001
-	EPOCHS = 2
-	MODEL_PATH = './models/'
+	EPOCHS = 3
 	MODEL_NAME = 'vgg11-model1.tfl'
 	SAVE_PATH_FILE = MODEL_PATH + MODEL_NAME
 	RUN_ID = 'train_vgg11_run_1'
-	CHECKPOINT_PATH = 'checkpoints/'
-	TENSORBOARDDIR = 'tensorboard/'
 	#
 	net = build_vgg11(LEARN_RATE)
 	model = train_vgg(net, X, Y,
@@ -61,34 +71,35 @@ def train_exec():
 						RUN_ID,
 						CHECKPOINT_PATH,
 						TENSORBOARDDIR)
+	
 	t = getCrono()
-	print ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
-	print ("Training completed in %d s"%(t))
-	print ('Epochs: %d'%EPOCHS)
-	report ('ID: '+RUN_ID)
-	report ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
-	report ("Training completed in %d s"%(t))
-	report ('Epochs: %d'%EPOCHS)
-	report ('Learning rate: %f'%LEARN_RATE)
 	#evaluate model
-	acc = evaluate_vgg(model,testX,testY)
-	report(acc)
-	report('\n')
+	acc = evaluate_model(model,testX,testY)
+	
+	report(RUN_ID, X,testX,t,EPOCHS, LEARN_RATE, acc)
+
+	#run more epochs of training
+	startCrono()
+	EPOCHS = 2
+	RUN_ID = RUN_ID+'_plus_epochs'
+	model = train_model(model, X, Y, EPOCHS, RUN_ID, SAVE_PATH_FILE)
+	t = getCrono()
+	#evaluate model
+	acc = evaluate_model(model,testX,testY)
+	report(RUN_ID, X,testX,t,EPOCHS, LEARN_RATE, acc)
+
 	return model
 
 def transfer_exec():
 	#transfer
 	#load model
 	startCrono()
-	MODEL_PATH = './models/'
 	MODEL_NAME = 'vgg11-model1.tfl'
 	N_MODEL_NAME = 'vgg11-transfered-model1.tfl'
 	SAVE_PATH_FILE = MODEL_PATH + N_MODEL_NAME
-	EPOCHS = 1
+	EPOCHS = 5
 	LEARN_RATE = 0.00001
 	RUN_ID = "transfer_vgg11_run_1"
-	CHECKPOINT_PATH = 'checkpoints/'
-	TENSORBOARDDIR = 'tensorboard/'
 	lmodel = load_vgg(11,
 						MODEL_PATH,
 						MODEL_NAME,
@@ -101,22 +112,14 @@ def transfer_exec():
 							SAVE_PATH_FILE)
 
 	t = getCrono()
-	print ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
-	print ("TRANSFER completed in %d s"%(t))
-	print ('Epochs: %d'%EPOCHS)
-	report ('ID: '+RUN_ID)
-	report ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
-	report ("Training completed in %d s"%(t))
-	report ('Epochs: %d'%EPOCHS)
-	report ('Learning rate: %f'%LEARN_RATE)
 	#evaluate model
-	acc = evaluate_vgg(lmodel,testX,testY)
-	report(acc)
-	report('\n')
-	print ('END')
+	acc = evaluate_model(lmodel,testX,testY)
+	report(RUN_ID, X,testX,t,EPOCHS, LEARN_RATE, acc)
 	return lmodel
 
 m = train_exec()
 tf.reset_default_graph()
 n = transfer_exec()
 tf.reset_default_graph()
+
+print ('END')
