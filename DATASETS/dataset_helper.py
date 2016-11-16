@@ -73,6 +73,22 @@ def get_svhn_extra(crop = False, see = False):
 		see_image(x[0])
 	return x, y, tx, ty
 
+def get_cifar10(instances = None, crop = False, see = False):
+	import tflearn.datasets.cifar10 as cifar10
+	(X, Y), (testX, testY) = cifar10.load_data(dirname="cifar10", one_hot=True)
+	x, y, tx, ty = X, Y, testX, testY
+	if (instances):
+		x, y = small_set(X,Y,instances,10)
+		tx, ty = small_set(testX,testY,instances/10,10)
+		if (len(tx)<1):
+			tx, ty = testX[-3:], testY[-3:]
+	if (crop): 
+		#crop images in output sets
+		[x, tx] = map(crop_images_in_set,[x, tx])
+	if (see):
+		see_image(x[0])
+	return x, y, tx, ty
+
 def see_image(data):
 	from matplotlib import pyplot as plt
 	plt.imshow(data, interpolation='nearest')
