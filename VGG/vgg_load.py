@@ -47,7 +47,7 @@ def vgg16(input, num_class,
 	ransf_params_encoded=['FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','NT']):
 	
 	transf_params = transfer_params_decode(transf_params_encoded)
-
+	
     network = conv_2d(input, 8, 3, activation='relu', scope='conv1_1', restore=transf_params[0][0], trainable=transf_params[0][1])
     network = conv_2d(network, 8, 3, activation='relu', scope='conv1_2', restore=transf_params[1][0], trainable=transf_params[1][1])
     network = max_pool_2d(network, 2, strides=2, name='maxpool1')
