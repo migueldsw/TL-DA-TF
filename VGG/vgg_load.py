@@ -91,7 +91,7 @@ def load_vgg(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,ten
 	                                learning_rate=learning_rate, 
 	                                restore=False)
 	model = tflearn.DNN(regress_l, checkpoint_path=checkpoint_path,
-	                    max_checkpoints=3, tensorboard_verbose=2,
+	                    max_checkpoints=3, tensorboard_verbose=0,
 	                    tensorboard_dir=tensorboard_dir)
 	# Load model weights
 	print ('Loading model...')
@@ -103,8 +103,8 @@ def load_vgg(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,ten
 def transfer_vgg(model,X,Y,epoch,run_id,save_path_file):
 	# Start finetuning
 	model.fit(X, Y, n_epoch=epoch, validation_set=0.0, shuffle=True,
-	          show_metric=True, batch_size=64, snapshot_epoch=False,
-	          snapshot_step=200, run_id=run_id)
+	          show_metric=True, batch_size=64, snapshot_epoch=True,
+	          run_id=run_id)
 	# Save the model
 	model.save(save_path_file)
 	print ('Model SAVED!')

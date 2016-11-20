@@ -93,15 +93,14 @@ def train_vgg(network,X,Y,epochs,save_path_file,runId,checkpt_path,tensorboard_d
 	print ("Training VGG...")
 	model = tflearn.DNN(network, 
 		checkpoint_path=checkpt_path,
-		max_checkpoints=1, 
-		tensorboard_verbose=2,
+		max_checkpoints=3, 
+		tensorboard_verbose=0,
 		tensorboard_dir=tensorboard_dir)
 	model.fit(X, Y, 
 		n_epoch=epochs, 
 		shuffle=True,
 		show_metric=True, 
 		batch_size=32, 
-		snapshot_step=500,
 		snapshot_epoch=True, 
 		run_id=runId,
 		validation_set=0.0)

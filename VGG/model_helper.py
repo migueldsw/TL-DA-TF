@@ -16,7 +16,6 @@ def train_model(model, X, Y, epochs, runId, save_path_file):
 		shuffle=True,
 		show_metric=True, 
 		batch_size=32, 
-		snapshot_step=500,
 		snapshot_epoch=True, 
 		run_id=runId,
 		validation_set=0.0)
