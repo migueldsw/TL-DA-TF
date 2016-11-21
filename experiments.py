@@ -8,7 +8,7 @@ import tensorflow as tf
 from VGG.vgg import build_vgg16, build_vgg11, train_vgg
 from VGG.model_helper import evaluate_model, train_model
 from VGG.vgg_load import load_vgg, transfer_vgg
-from DATASETS.dataset_helper import get_mnist, get_svhn
+from DATASETS.dataset_helper import get_mnist, get_svhn, get_cifar10
 from report import appendFile, checkDir
 
 #-----------------
@@ -34,6 +34,7 @@ print ("Data loading and preprocessing...")
 # sX, sY, stestX, stestY = get_svhn(instances=50, crop=True)
 mX, mY, mtestX, mtestY = get_mnist(rgb=True)
 sX, sY, stestX, stestY = get_svhn(crop=True)
+cX, cY, ctestX, ctestY = get_cifar10(crop=True)
 
 
 MODEL_PATH = './models/'
@@ -151,7 +152,20 @@ def EXEC2():
 	train_exec(build_vgg16,sX,sY,stestX,stestY,20,'VGG16_B4.tfl',"train16_B4")
 	train_exec(build_vgg16,sX,sY,stestX,stestY,20,'VGG16_B5.tfl',"train16_B5")
 
+def EXEC3():
+	train_exec(build_vgg11,cX,cY,ctestX,ctestY,20,'VGG11_C1.tfl',"train11_C1")
+	train_exec(build_vgg11,cX,cY,ctestX,ctestY,20,'VGG11_C2.tfl',"train11_C2")
+	train_exec(build_vgg11,cX,cY,ctestX,ctestY,20,'VGG11_C3.tfl',"train11_C3")
+	train_exec(build_vgg11,cX,cY,ctestX,ctestY,20,'VGG11_C4.tfl',"train11_C4")
+	train_exec(build_vgg11,cX,cY,ctestX,ctestY,20,'VGG11_C5.tfl',"train11_C5")
+	train_exec(build_vgg16,cX,cY,ctestX,ctestY,20,'VGG16_C1.tfl',"train16_C1")
+	train_exec(build_vgg16,cX,cY,ctestX,ctestY,20,'VGG16_C2.tfl',"train16_C2")
+	train_exec(build_vgg16,cX,cY,ctestX,ctestY,20,'VGG16_C3.tfl',"train16_C3")
+	train_exec(build_vgg16,cX,cY,ctestX,ctestY,20,'VGG16_C4.tfl',"train16_C4")
+	train_exec(build_vgg16,cX,cY,ctestX,ctestY,20,'VGG16_C5.tfl',"train16_C5")
+
 #EXEC1()
 #EXEC2()
+#EXEC3()
 
 sout('END!')
