@@ -59,17 +59,12 @@ def sout(i):
 	print(i)
 	report_line(i)
 
-def train_exec(X,Y,testX,testY,EPOCHS,MODEL_NAME,RUN_ID):
+def train_exec(build_vgg,X,Y,testX,testY,EPOCHS,MODEL_NAME,RUN_ID):
 	startCrono()
-
 	# Training
 	LEARN_RATE = 0.00001
-	#EPOCHS = 3
-	# MODEL_NAME = 'vgg11-model1.tfl'
 	SAVE_PATH_FILE = MODEL_PATH + MODEL_NAME
-	# RUN_ID = 'train_vgg11_run_1'
-	#
-	net = build_vgg11(LEARN_RATE)
+	net = build_vgg(LEARN_RATE)
 	model = train_vgg(net, X, Y,
 						EPOCHS,
 						SAVE_PATH_FILE,
@@ -80,30 +75,16 @@ def train_exec(X,Y,testX,testY,EPOCHS,MODEL_NAME,RUN_ID):
 	#evaluate model
 	acc = evaluate_model(model,testX,testY)
 	report(RUN_ID, X,testX,t,EPOCHS, LEARN_RATE, acc)
-
-	# #run more epochs of training
-	# startCrono()
-	# EPOCHS = 2
-	# #RUN_ID = RUN_ID+'_plus_epochs'
-	# model = train_model(model, X, Y, EPOCHS, RUN_ID, SAVE_PATH_FILE)
-	# t = getCrono()
-	# #evaluate model
-	# acc = evaluate_model(model,testX,testY)
-	# report(RUN_ID, X,testX,t,EPOCHS, LEARN_RATE, acc)
 	tf.reset_default_graph()
 	#return model
 
-def transfer_exec(X,Y,testX,testY,EPOCHS,MODEL_NAME,RUN_ID, N_MODEL_NAME):
+def transfer_exec(vgg,X,Y,testX,testY,EPOCHS,MODEL_NAME,RUN_ID, N_MODEL_NAME):
 	#transfer
 	#load model
 	startCrono()
-	#MODEL_NAME = 'vgg11-model1.tfl'
-	#N_MODEL_NAME = 'vgg11-transfered-model1.tfl'
 	SAVE_PATH_FILE = MODEL_PATH + N_MODEL_NAME
-	#EPOCHS = 5
 	LEARN_RATE = 0.00001
-	#RUN_ID = "transfer_vgg11_run_1"
-	lmodel = load_vgg(11,
+	lmodel = load_vgg(vgg,
 						MODEL_PATH,
 						MODEL_NAME,
 						LEARN_RATE,
@@ -113,7 +94,6 @@ def transfer_exec(X,Y,testX,testY,EPOCHS,MODEL_NAME,RUN_ID, N_MODEL_NAME):
 							EPOCHS,
 							RUN_ID,
 							SAVE_PATH_FILE)
-
 	t = getCrono()
 	#evaluate model
 	acc = evaluate_model(lmodel,testX,testY)
@@ -122,27 +102,56 @@ def transfer_exec(X,Y,testX,testY,EPOCHS,MODEL_NAME,RUN_ID, N_MODEL_NAME):
 	#return lmodel
 
 
-# DA
-train_exec(mX,mY,mtestX,mtestY,20,'model_A.tfl',"train_A")
+# # DA
+# train_exec(mX,mY,mtestX,mtestY,20,'model_A.tfl',"train_A")
 
-# DB
-train_exec(sX,sY,stestX,stestY,20,'model_B.tfl',"train_B")
+# # DB
+# train_exec(sX,sY,stestX,stestY,20,'model_B.tfl',"train_B")
 
-# DA|DA
-train_exec(mX,mY,mtestX,mtestY,10,'model_A1.tfl',"train_A1")
-transfer_exec(mX,mY,mtestX,mtestY,10,'model_A1.tfl',"transf_AA", 'model_AA.tfl')
+# # DA|DA
+# train_exec(mX,mY,mtestX,mtestY,10,'model_A1.tfl',"train_A1")
+# transfer_exec(mX,mY,mtestX,mtestY,10,'model_A1.tfl',"transf_AA", 'model_AA.tfl')
 
-# DB|DB
-train_exec(sX,sY,stestX,stestY,10,'model_B1.tfl',"train_B1")
-transfer_exec(sX,sY,stestX,stestY,10,'model_B1.tfl',"transf_BB", 'model_BB.tfl')
+# # DB|DB
+# train_exec(sX,sY,stestX,stestY,10,'model_B1.tfl',"train_B1")
+# transfer_exec(sX,sY,stestX,stestY,10,'model_B1.tfl',"transf_BB", 'model_BB.tfl')
 
-# DA|DB
-train_exec(mX,mY,mtestX,mtestY,10,'model_A2.tfl',"train_A2")
-transfer_exec(sX,sY,stestX,stestY,10,'model_A2.tfl',"transf_AB", 'model_AB.tfl')
+# # DA|DB
+# train_exec(mX,mY,mtestX,mtestY,10,'model_A2.tfl',"train_A2")
+# transfer_exec(sX,sY,stestX,stestY,10,'model_A2.tfl',"transf_AB", 'model_AB.tfl')
 
-# DB|DA
-train_exec(sX,sY,stestX,stestY,10,'model_B2.tfl',"train_B2")
-transfer_exec(mX,mY,mtestX,mtestY,10,'model_B2.tfl',"transf_BA", 'model_BA.tfl')
+# # DB|DA
+# train_exec(sX,sY,stestX,stestY,10,'model_B2.tfl',"train_B2")
+# transfer_exec(mX,mY,mtestX,mtestY,10,'model_B2.tfl',"transf_BA", 'model_BA.tfl')
 
+
+def EXEC1():
+	train_exec(build_vgg11,mX,mY,mtestX,mtestY,20,'VGG11_A1.tfl',"train11_A1")
+	train_exec(build_vgg11,mX,mY,mtestX,mtestY,20,'VGG11_A2.tfl',"train11_A2")
+	train_exec(build_vgg11,mX,mY,mtestX,mtestY,20,'VGG11_A3.tfl',"train11_A3")
+	train_exec(build_vgg11,mX,mY,mtestX,mtestY,20,'VGG11_A4.tfl',"train11_A4")
+	train_exec(build_vgg11,mX,mY,mtestX,mtestY,20,'VGG11_A5.tfl',"train11_A5")
+
+	train_exec(build_vgg11,sX,sY,stestX,stestY,20,'VGG11_B1.tfl',"train11_B1")
+	train_exec(build_vgg11,sX,sY,stestX,stestY,20,'VGG11_B2.tfl',"train11_B2")
+	train_exec(build_vgg11,sX,sY,stestX,stestY,20,'VGG11_B3.tfl',"train11_B3")
+	train_exec(build_vgg11,sX,sY,stestX,stestY,20,'VGG11_B4.tfl',"train11_B4")
+	train_exec(build_vgg11,sX,sY,stestX,stestY,20,'VGG11_B5.tfl',"train11_B5")
+
+def EXEC2():
+	train_exec(build_vgg16,mX,mY,mtestX,mtestY,20,'VGG16_A1.tfl',"train16_A1")
+	train_exec(build_vgg16,mX,mY,mtestX,mtestY,20,'VGG16_A2.tfl',"train16_A2")
+	train_exec(build_vgg16,mX,mY,mtestX,mtestY,20,'VGG16_A3.tfl',"train16_A3")
+	train_exec(build_vgg16,mX,mY,mtestX,mtestY,20,'VGG16_A4.tfl',"train16_A4")
+	train_exec(build_vgg16,mX,mY,mtestX,mtestY,20,'VGG16_A5.tfl',"train16_A5")
+
+	train_exec(build_vgg16,sX,sY,stestX,stestY,20,'VGG16_B1.tfl',"train16_B1")
+	train_exec(build_vgg16,sX,sY,stestX,stestY,20,'VGG16_B2.tfl',"train16_B2")
+	train_exec(build_vgg16,sX,sY,stestX,stestY,20,'VGG16_B3.tfl',"train16_B3")
+	train_exec(build_vgg16,sX,sY,stestX,stestY,20,'VGG16_B4.tfl',"train16_B4")
+	train_exec(build_vgg16,sX,sY,stestX,stestY,20,'VGG16_B5.tfl',"train16_B5")
+
+#EXEC1()
+#EXEC2()
 
 sout('END!')
