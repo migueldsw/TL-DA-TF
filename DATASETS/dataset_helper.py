@@ -60,6 +60,7 @@ def get_svhn(instances = None, crop = False, see = False):
 		[x, tx] = map(crop_images_in_set,[x, tx])
 	if (see):
 		see_image(x[0])
+	[x, tx] = map(zero_one_dataset,[x, tx])
 	return x, y, tx, ty
 
 def get_svhn_extra(crop = False, see = False):
@@ -71,6 +72,7 @@ def get_svhn_extra(crop = False, see = False):
 		[x, tx] = map(crop_images_in_set,[x, tx])
 	if (see):
 		see_image(x[0])
+	[x, tx] = map(zero_one_dataset,[x, tx])
 	return x, y, tx, ty
 
 def get_cifar10(instances = None, crop = False, see = False):
@@ -124,3 +126,14 @@ def crop_images_in_set(X):
 	for i in range(len(X)):
 		nX[i] = crop_img(X[i])
 	return nX
+
+def zero_one_range(v,min,max):
+	return float(v-min)/(max-min)
+
+def zero_one_dataset(data):
+	for n in range(len(data)):
+		for rgb in range(3):
+			for i in range(28):
+				for j in range(28):
+					data[n,i,j,rgb] = zero_one_range(data[n,i,j,rgb],0,255)
+	return data
