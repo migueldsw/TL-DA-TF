@@ -22,3 +22,19 @@ def train_model(model, X, Y, epochs, runId, save_path_file):
 	# Save the model
 	model.save(save_path_file)
 	return model
+
+def layers_to_transfer(code,vgg):#code = 'nf' 
+	if (vgg == 11):
+		out = ['NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT']
+	if (vgg == 16):
+		out = ['NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT']
+	for i in range(int(code[:-1])):
+		if (code[-1] == '+'): #fine tuning
+			out[i] = 'FT'
+		if (code[-1] == '-'): #frozen
+			out[i] = 'LK'
+	return out
+
+
+
+	

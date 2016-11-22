@@ -41,7 +41,7 @@ def vgg11(input, num_class, transf_params_encoded=['FT','FT','FT','FT','FT','FT'
 
     return network
 
-def vgg16(input, num_class, ransf_params_encoded=['FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','NT']):
+def vgg16(input, num_class, transf_params_encoded=['FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','FT','NT']):
     transf_params = transfer_params_decode(transf_params_encoded)
 
     network = conv_2d(input, 8, 3, activation='relu', scope='conv1_1', restore=transf_params[0][0], trainable=transf_params[0][1])
@@ -77,7 +77,7 @@ def vgg16(input, num_class, ransf_params_encoded=['FT','FT','FT','FT','FT','FT',
 
     return network
 
-def load_vgg(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,tensorboard_dir):
+def load_vgg(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,tensorboard_dir, transf_params_encoded):
 	NUM_CLASSES = 10
 	# VGG Network
 	if (vggnet == 11):
@@ -85,7 +85,7 @@ def load_vgg(vggnet,model_path,model_file_name,learning_rate,checkpoint_path,ten
 	elif (vggnet == 16):
 		mvggnet = vgg16
 	input_layer = input_data(shape=[None, 28, 28, 3], name='input')
-	softmax = mvggnet(input_layer, NUM_CLASSES)
+	softmax = mvggnet(input_layer, NUM_CLASSES, transf_params_encoded)
 	regress_l = regression(softmax, optimizer='rmsprop',
 	                                loss='categorical_crossentropy',
 	                                learning_rate=learning_rate, 
@@ -114,13 +114,13 @@ def transfer_params_decode(coded_params):
 	#returns the params for transfer
 	out = []
 	for i in coded_params:
-		if i == 'FT':
+		if i == 'FT': #Fine Tuning or Unlocked
 			# (restore, trainable)
 			out.append((True, True))
-		if i == 'LK':
+		if i == 'LK': #Locked or Frozen
 			# (restore, trainable)
 			out.append((True, False))
-		if i == 'NT':
+		if i == 'NT': #Normal Train
 			# (restore, trainable)
 			out.append((False, True))
 	return out
