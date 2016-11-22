@@ -31,15 +31,15 @@ REPORT_LOG_FILE_NAME = 'run.log'
 ## GLOBAL VALUES ----------------------------------------------- 
 # Datasets loading and preprocessing
 print ("Data loading and preprocessing...")
-mX, mY, mtestX, mtestY = get_mnist(instances=50,rgb=True)
-sX, sY, stestX, stestY = get_svhn(instances=50,crop=True)
-cX, cY, ctestX, ctestY = get_cifar10(instances=50,crop=True)
-# mX, mY, mtestX, mtestY = get_mnist(rgb=True)
-# sX, sY, stestX, stestY = get_svhn(crop=True)
-# cX, cY, ctestX, ctestY = get_cifar10(crop=True)
+# mX, mY, mtestX, mtestY = get_mnist(instances=50,rgb=True)
+# sX, sY, stestX, stestY = get_svhn(instances=50,crop=True)
+# cX, cY, ctestX, ctestY = get_cifar10(instances=50,crop=True)
+mX, mY, mtestX, mtestY = get_mnist(rgb=True)
+sX, sY, stestX, stestY = get_svhn(crop=True)
+cX, cY, ctestX, ctestY = get_cifar10(crop=True)
 
-EPOCHS = 3
-#EPOCHS = 20
+# EPOCHS = 3
+EPOCHS = 20
 LEARN_RATE = 0.00001
 
 MODEL_PATH = './models/'
@@ -194,7 +194,7 @@ def EXEC_TRANSFER():
 		pretrain_transfer(D,build_vgg)
 	for S in ['A','B','C']:
 		for T in ['A','B']:
-			for layer in ['1','2','4','6','8','10','11']:
+			for layer in ['1','2','4','6','8','10']:
 				for mode in ['+','-']:
 					transfer(S+layer+mode+T,vgg)
 

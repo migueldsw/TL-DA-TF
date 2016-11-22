@@ -25,9 +25,9 @@ def train_model(model, X, Y, epochs, runId, save_path_file):
 
 def layers_to_transfer(code,vgg):#code = 'nf' 
 	if (vgg == 11):
-		out = ['NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT']
+		out = ['NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','FT']
 	if (vgg == 16):
-		out = ['NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT']
+		out = ['NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','NT','FT']
 	for i in range(int(code[:-1])):
 		if (code[-1] == '+'): #fine tuning
 			out[i] = 'FT'
