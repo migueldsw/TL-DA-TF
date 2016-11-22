@@ -50,7 +50,7 @@ checkDir(CHECKPOINT_PATH)
 checkDir(TENSORBOARDDIR)
 #--------------------------------------------------------------
 
-def report(RUN_ID, X,testX,t, LEARN_RATE, acc):
+def report(RUN_ID, X,testX,t, EPOCHS, LEARN_RATE, acc):
 	strs = []
 	strs.append ('ID: '+RUN_ID)
 	strs.append ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
