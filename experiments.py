@@ -39,7 +39,7 @@ sX, sY, stestX, stestY = get_svhn(crop=True)
 cX, cY, ctestX, ctestY = get_cifar10(crop=True)
 
 # EPOCHS = 3
-EPOCHS = 20
+EPOCHS = 50
 LEARN_RATE = 0.00001
 
 MODEL_PATH = './models/'
@@ -193,7 +193,7 @@ def EXEC_TRANSFER():
 	for D in ['A','B','C']:
 		pretrain_transfer(D,build_vgg)
 	for S in ['A','B','C']:
-		for T in ['A','B']:
+		for T in ['A','B','C']:
 			for layer in ['1','2','4','6','8','10']:
 				for mode in ['+','-']:
 					transfer(S+layer+mode+T,vgg)
@@ -202,6 +202,17 @@ def EXEC_TRANSFER():
 #EXEC1()
 #EXEC2()
 #EXEC3()
+
+from subprocess import call
 EXEC_TRANSFER()
+call(["sh", "extras/backup.sh", "BKP1"])
+EXEC_TRANSFER()
+call(["sh", "extras/backup.sh", "BKP2"])
+EXEC_TRANSFER()
+call(["sh", "extras/backup.sh", "BKP3"])
+EXEC_TRANSFER()
+call(["sh", "extras/backup.sh", "BKP4"])
+EXEC_TRANSFER()
+call(["sh", "extras/backup.sh", "BKP5"])
 
 sout('END!')
