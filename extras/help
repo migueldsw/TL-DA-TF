@@ -11,3 +11,6 @@ List dirs and space usage:
   
 Run Tensorboard:
   tensorboard --logdir=<path_to_log-directory>
+  
+Execute in background
+  nohup python <python_code.py> > <output_file_name.log> &
