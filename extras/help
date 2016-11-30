@@ -1,0 +1,13 @@
+Useful commands:
+
+Get current path (print working directory):
+  pwd
+
+Download files (dirs) from server:
+  rsync -azP <vm_user>@<server_ip>:<server_dir_path> <destination_local_path>
+  
+List dirs and space usage:
+  du -ch
+  
+Run Tensorboard:
+  tensorboard --logdir=<path_to_log-directory>
