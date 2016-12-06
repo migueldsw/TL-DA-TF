@@ -150,6 +150,7 @@ def transfer(params_str,vgg): # Dn_D
 
 
 def EXEC_BASE(n):
+	n = str(n)
 	train_exec(build_vgg11,mX,mY,mtestX,mtestY,'VGG11_A'+n+'.tfl',"train11_A"+n)
 	train_exec(build_vgg16,mX,mY,mtestX,mtestY,'VGG16_A'+n+'.tfl',"train16_A"+n)
 	train_exec(build_vgg11,sX,sY,stestX,stestY,'VGG11_B'+n+'.tfl',"train11_B"+n)
@@ -174,13 +175,13 @@ from subprocess import call
 
 BASE_EXPERIMENTS = 10
 for n in range(BASE_EXPERIMENTS):
-	EXEC_BASE(n)
-	call(["sh", "extras/backup.sh", "BKP-BASE-"+n])
+	EXEC_BASE(str(n))
+	call(["sh", "extras/backup.sh", "BKP-BASE-"+str(n)])
 
 TRANSFER_EXPERIMENTS = 10
 for n in range(TRANSFER_EXPERIMENTS):
 	EXEC_TRANSFER()
-	call(["sh", "extras/backup.sh", "BKP-TRANSFER-"+n])
+	call(["sh", "extras/backup.sh", "BKP-TRANSFER-"+str(n)])
 
 
 sout('END!')
