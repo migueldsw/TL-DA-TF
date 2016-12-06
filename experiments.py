@@ -149,43 +149,14 @@ def transfer(params_str,vgg): # Dn_D
 	transfer_exec(vgg,X,Y,testX,testY,trained_model_name,params_str, params_str+'.tfl',layers_to_transfer(transferParams,vgg))
 
 
-def EXEC1():
-	train_exec(build_vgg11,mX,mY,mtestX,mtestY,'VGG11_A1.tfl',"train11_A1")
-	train_exec(build_vgg11,mX,mY,mtestX,mtestY,'VGG11_A2.tfl',"train11_A2")
-	train_exec(build_vgg11,mX,mY,mtestX,mtestY,'VGG11_A3.tfl',"train11_A3")
-	train_exec(build_vgg11,mX,mY,mtestX,mtestY,'VGG11_A4.tfl',"train11_A4")
-	train_exec(build_vgg11,mX,mY,mtestX,mtestY,'VGG11_A5.tfl',"train11_A5")
-
-	train_exec(build_vgg11,sX,sY,stestX,stestY,'VGG11_B1.tfl',"train11_B1")
-	train_exec(build_vgg11,sX,sY,stestX,stestY,'VGG11_B2.tfl',"train11_B2")
-	train_exec(build_vgg11,sX,sY,stestX,stestY,'VGG11_B3.tfl',"train11_B3")
-	train_exec(build_vgg11,sX,sY,stestX,stestY,'VGG11_B4.tfl',"train11_B4")
-	train_exec(build_vgg11,sX,sY,stestX,stestY,'VGG11_B5.tfl',"train11_B5")
-
-def EXEC2():
-	train_exec(build_vgg16,mX,mY,mtestX,mtestY,'VGG16_A1.tfl',"train16_A1")
-	train_exec(build_vgg16,mX,mY,mtestX,mtestY,'VGG16_A2.tfl',"train16_A2")
-	train_exec(build_vgg16,mX,mY,mtestX,mtestY,'VGG16_A3.tfl',"train16_A3")
-	train_exec(build_vgg16,mX,mY,mtestX,mtestY,'VGG16_A4.tfl',"train16_A4")
-	train_exec(build_vgg16,mX,mY,mtestX,mtestY,'VGG16_A5.tfl',"train16_A5")
-
-	train_exec(build_vgg16,sX,sY,stestX,stestY,'VGG16_B1.tfl',"train16_B1")
-	train_exec(build_vgg16,sX,sY,stestX,stestY,'VGG16_B2.tfl',"train16_B2")
-	train_exec(build_vgg16,sX,sY,stestX,stestY,'VGG16_B3.tfl',"train16_B3")
-	train_exec(build_vgg16,sX,sY,stestX,stestY,'VGG16_B4.tfl',"train16_B4")
-	train_exec(build_vgg16,sX,sY,stestX,stestY,'VGG16_B5.tfl',"train16_B5")
-
-def EXEC3():
-	train_exec(build_vgg11,cX,cY,ctestX,ctestY,'VGG11_C1.tfl',"train11_C1")
-	train_exec(build_vgg11,cX,cY,ctestX,ctestY,'VGG11_C2.tfl',"train11_C2")
-	train_exec(build_vgg11,cX,cY,ctestX,ctestY,'VGG11_C3.tfl',"train11_C3")
-	train_exec(build_vgg11,cX,cY,ctestX,ctestY,'VGG11_C4.tfl',"train11_C4")
-	train_exec(build_vgg11,cX,cY,ctestX,ctestY,'VGG11_C5.tfl',"train11_C5")
-	train_exec(build_vgg16,cX,cY,ctestX,ctestY,'VGG16_C1.tfl',"train16_C1")
-	train_exec(build_vgg16,cX,cY,ctestX,ctestY,'VGG16_C2.tfl',"train16_C2")
-	train_exec(build_vgg16,cX,cY,ctestX,ctestY,'VGG16_C3.tfl',"train16_C3")
-	train_exec(build_vgg16,cX,cY,ctestX,ctestY,'VGG16_C4.tfl',"train16_C4")
-	train_exec(build_vgg16,cX,cY,ctestX,ctestY,'VGG16_C5.tfl',"train16_C5")
+def EXEC_BASE(n):
+	train_exec(build_vgg11,mX,mY,mtestX,mtestY,'VGG11_A'+n+'.tfl',"train11_A"+n)
+	train_exec(build_vgg16,mX,mY,mtestX,mtestY,'VGG16_A'+n+'.tfl',"train16_A"+n)
+	train_exec(build_vgg11,sX,sY,stestX,stestY,'VGG11_B'+n+'.tfl',"train11_B"+n)
+	train_exec(build_vgg16,sX,sY,stestX,stestY,'VGG16_B'+n+'.tfl',"train16_B"+n)
+	train_exec(build_vgg11,cX,cY,ctestX,ctestY,'VGG11_C'+n+'.tfl',"train11_C"+n)
+	train_exec(build_vgg16,cX,cY,ctestX,ctestY,'VGG16_C'+n+'.tfl',"train16_C"+n)
+	
 
 def EXEC_TRANSFER():
 	build_vgg = build_vgg11
@@ -199,20 +170,17 @@ def EXEC_TRANSFER():
 					transfer(S+layer+mode+T,vgg)
 
 
-#EXEC1()
-#EXEC2()
-#EXEC3()
-
 from subprocess import call
-EXEC_TRANSFER()
-call(["sh", "extras/backup.sh", "BKP1"])
-EXEC_TRANSFER()
-call(["sh", "extras/backup.sh", "BKP2"])
-EXEC_TRANSFER()
-call(["sh", "extras/backup.sh", "BKP3"])
-EXEC_TRANSFER()
-call(["sh", "extras/backup.sh", "BKP4"])
-EXEC_TRANSFER()
-call(["sh", "extras/backup.sh", "BKP5"])
+
+BASE_EXPERIMENTS = 10
+for n in range(BASE_EXPERIMENTS):
+	EXEC_BASE(n)
+	call(["sh", "extras/backup.sh", "BKP-BASE-"+n])
+
+TRANSFER_EXPERIMENTS = 10
+for n in range(TRANSFER_EXPERIMENTS):
+	EXEC_TRANSFER()
+	call(["sh", "extras/backup.sh", "BKP-TRANSFER-"+n])
+
 
 sout('END!')
