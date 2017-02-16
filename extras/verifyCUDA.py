@@ -12,3 +12,5 @@ sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 
 # Runs the op.
 print sess.run(c)
+#c = [[ 22.  28.]
+#     [ 49.  64.]]
