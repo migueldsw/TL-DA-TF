@@ -1,5 +1,5 @@
-#verify CUDA installation and support
-#from Google TensorFlow tutorial:
+# verify CUDA installation and support
+# from Google TensorFlow tutorial:
 import tensorflow as tf
 
 # Creates a graph.
@@ -12,5 +12,5 @@ sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 
 # Runs the op.
 print sess.run(c)
-#c = [[ 22.  28.]
+# c = [[ 22.  28.]
 #     [ 49.  64.]]

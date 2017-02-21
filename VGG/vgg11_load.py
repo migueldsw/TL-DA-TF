@@ -9,7 +9,6 @@ import os
 
 
 def vgg11(input, num_class):
-
     x = tflearn.conv_2d(input, 8, 3, activation='relu', scope='conv1_1')
     x = tflearn.max_pool_2d(x, 2, strides=2, name='maxpool1')
 
@@ -42,8 +41,8 @@ def vgg11(input, num_class):
 model_path = "./models/"
 
 from dataset_helper import get_mnist
-X, Y, testX, testY = get_mnist(rgb=True)
 
+X, Y, testX, testY = get_mnist(rgb=True)
 
 NUM_CLASSES = 10
 LEARNING_RATE = 0.0001
@@ -76,5 +75,5 @@ model.save('./models/vgg11-retrained-1')
 print ('Model SAVED!')
 
 # Evaluate accuracy.
-accuracy_score = model.evaluate(testX,testY,batch_size=32)
-print('Accuracy: %s' %accuracy_score)
+accuracy_score = model.evaluate(testX, testY, batch_size=32)
+print('Accuracy: %s' % accuracy_score)

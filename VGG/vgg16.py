@@ -1,4 +1,4 @@
-#from tflearn examples: https://github.com/tflearn/tflearn/blob/master/examples/images/vgg_network.py
+# from tflearn examples: https://github.com/tflearn/tflearn/blob/master/examples/images/vgg_network.py
 
 """ Very Deep Convolutional Networks for Large-Scale Visual Recognition.
 Applying VGG 16-layers convolutional network to MNIST and SVHN
@@ -18,11 +18,11 @@ from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.estimator import regression
 import os
 
-
 # Data loading and preprocessing
-print ("Data loading and preprocessing...")
+print("Data loading and preprocessing...")
 #
 from dataset_helper import get_mnist
+
 # X, Y, testX, testY = get_mnist(instances=10, rgb=True)
 X, Y, testX, testY = get_mnist(rgb=True)
 #
@@ -30,7 +30,7 @@ X, Y, testX, testY = get_mnist(rgb=True)
 # X, Y, testX, testY = get_svhn(instances=10, crop=True)
 #
 
-#Values
+# Values
 LEARNING_RATE = 0.0001
 EPOCHS = 2
 
@@ -70,45 +70,53 @@ network = regression(network, optimizer='rmsprop',
                      loss='categorical_crossentropy',
                      learning_rate=LEARNING_RATE)
 
-#-----------------
-#time cost evaluation
+# -----------------
+# time cost evaluation
 from datetime import datetime as dt
-TIME = [] #[t_init,t_final]
+
+TIME = []  # [t_init,t_final]
+
+
 def startCrono():
     TIME.append(dt.now())
-def getCrono(): # returns delta t in seconds
+
+
+def getCrono():  # returns delta t in seconds
     TIME.append(dt.now())
-    deltat = TIME[-1]-TIME[-2]
+    deltat = TIME[-1] - TIME[-2]
     return deltat.seconds
+
+
 def checkDir(directory):
-  if not os.path.exists(directory):
-    os.makedirs(directory)
-#----------------
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+
+# ----------------
 
 startCrono()
 
 # Training
-print ("Training VGG-16...")
-
+print("Training VGG-16...")
 
 checkDir('checkpoints/model_vgg16')
 checkDir('tensorboard/vgg16')
 model = tflearn.DNN(network, checkpoint_path='~checkpoints/model_vgg16',
-                    max_checkpoints=1, tensorboard_verbose=2, 
+                    max_checkpoints=1, tensorboard_verbose=2,
                     tensorboard_dir="tensorboard/vgg16")
 model.fit(X, Y, n_epoch=EPOCHS, shuffle=True,
           show_metric=True, batch_size=32, snapshot_step=500,
-          snapshot_epoch=True, run_id='vgg_16_full_4',validation_set=0.0)
+          snapshot_epoch=True, run_id='vgg_16_full_4', validation_set=0.0)
 
 # Save the model
 checkDir('./models/')
 model.save('./models/vgg16-model1.tfl')
-print ('Model SAVED!')
+print('Model SAVED!')
 
-print ("Dataset in use: train size= %d; test size= %d" %(len(X),len(testX)))
-print ("Training completed in %d s"%(getCrono()))
-print ('Epochs: %d'%EPOCHS)
+print("Dataset in use: train size= %d; test size= %d" % (len(X), len(testX)))
+print("Training completed in %d s" % (getCrono()))
+print('Epochs: %d' % EPOCHS)
 
 # Evaluate accuracy.
-accuracy_score = model.evaluate(testX,testY,batch_size=32)
-print('Accuracy: %s' %accuracy_score)
+accuracy_score = model.evaluate(testX, testY, batch_size=32)
+print('Accuracy: %s' % accuracy_score)

@@ -23,14 +23,13 @@ class vgg16:
         if weights is not None and sess is not None:
             self.load_weights(weights, sess)
 
-
     def convlayers(self):
         self.parameters = []
 
         # zero-mean input
         with tf.name_scope('preprocess') as scope:
             mean = tf.constant([123.68, 116.779, 103.939], dtype=tf.float32, shape=[1, 1, 1, 3], name='img_mean')
-            images = self.imgs-mean
+            images = self.imgs - mean
 
         # conv1_1
         with tf.name_scope('conv1_1') as scope:
@@ -56,10 +55,10 @@ class vgg16:
 
         # pool1
         self.pool1 = tf.nn.max_pool(self.conv1_2,
-                               ksize=[1, 2, 2, 1],
-                               strides=[1, 2, 2, 1],
-                               padding='SAME',
-                               name='pool1')
+                                    ksize=[1, 2, 2, 1],
+                                    strides=[1, 2, 2, 1],
+                                    padding='SAME',
+                                    name='pool1')
 
         # conv2_1
         with tf.name_scope('conv2_1') as scope:
@@ -85,10 +84,10 @@ class vgg16:
 
         # pool2
         self.pool2 = tf.nn.max_pool(self.conv2_2,
-                               ksize=[1, 2, 2, 1],
-                               strides=[1, 2, 2, 1],
-                               padding='SAME',
-                               name='pool2')
+                                    ksize=[1, 2, 2, 1],
+                                    strides=[1, 2, 2, 1],
+                                    padding='SAME',
+                                    name='pool2')
 
         # conv3_1
         with tf.name_scope('conv3_1') as scope:
@@ -125,10 +124,10 @@ class vgg16:
 
         # pool3
         self.pool3 = tf.nn.max_pool(self.conv3_3,
-                               ksize=[1, 2, 2, 1],
-                               strides=[1, 2, 2, 1],
-                               padding='SAME',
-                               name='pool3')
+                                    ksize=[1, 2, 2, 1],
+                                    strides=[1, 2, 2, 1],
+                                    padding='SAME',
+                                    name='pool3')
 
         # conv4_1
         with tf.name_scope('conv4_1') as scope:
@@ -165,10 +164,10 @@ class vgg16:
 
         # pool4
         self.pool4 = tf.nn.max_pool(self.conv4_3,
-                               ksize=[1, 2, 2, 1],
-                               strides=[1, 2, 2, 1],
-                               padding='SAME',
-                               name='pool4')
+                                    ksize=[1, 2, 2, 1],
+                                    strides=[1, 2, 2, 1],
+                                    padding='SAME',
+                                    name='pool4')
 
         # conv5_1
         with tf.name_scope('conv5_1') as scope:
@@ -205,20 +204,20 @@ class vgg16:
 
         # pool5
         self.pool5 = tf.nn.max_pool(self.conv5_3,
-                               ksize=[1, 2, 2, 1],
-                               strides=[1, 2, 2, 1],
-                               padding='SAME',
-                               name='pool4')
+                                    ksize=[1, 2, 2, 1],
+                                    strides=[1, 2, 2, 1],
+                                    padding='SAME',
+                                    name='pool4')
 
     def fc_layers(self):
         # fc1
         with tf.name_scope('fc1') as scope:
             shape = int(np.prod(self.pool5.get_shape()[1:]))
             fc1w = tf.Variable(tf.truncated_normal([shape, 4096],
-                                                         dtype=tf.float32,
-                                                         stddev=1e-1), name='weights')
+                                                   dtype=tf.float32,
+                                                   stddev=1e-1), name='weights')
             fc1b = tf.Variable(tf.constant(1.0, shape=[4096], dtype=tf.float32),
-                                 trainable=True, name='biases')
+                               trainable=True, name='biases')
             pool5_flat = tf.reshape(self.pool5, [-1, shape])
             fc1l = tf.nn.bias_add(tf.matmul(pool5_flat, fc1w), fc1b)
             self.fc1 = tf.nn.relu(fc1l)
@@ -227,10 +226,10 @@ class vgg16:
         # fc2
         with tf.name_scope('fc2') as scope:
             fc2w = tf.Variable(tf.truncated_normal([4096, 4096],
-                                                         dtype=tf.float32,
-                                                         stddev=1e-1), name='weights')
+                                                   dtype=tf.float32,
+                                                   stddev=1e-1), name='weights')
             fc2b = tf.Variable(tf.constant(1.0, shape=[4096], dtype=tf.float32),
-                                 trainable=True, name='biases')
+                               trainable=True, name='biases')
             fc2l = tf.nn.bias_add(tf.matmul(self.fc1, fc2w), fc2b)
             self.fc2 = tf.nn.relu(fc2l)
             self.parameters += [fc2w, fc2b]
@@ -238,10 +237,10 @@ class vgg16:
         # fc3
         with tf.name_scope('fc3') as scope:
             fc3w = tf.Variable(tf.truncated_normal([4096, 1000],
-                                                         dtype=tf.float32,
-                                                         stddev=1e-1), name='weights')
+                                                   dtype=tf.float32,
+                                                   stddev=1e-1), name='weights')
             fc3b = tf.Variable(tf.constant(1.0, shape=[1000], dtype=tf.float32),
-                                 trainable=True, name='biases')
+                               trainable=True, name='biases')
             self.fc3l = tf.nn.bias_add(tf.matmul(self.fc2, fc3w), fc3b)
             self.parameters += [fc3w, fc3b]
 
@@ -252,21 +251,23 @@ class vgg16:
             print i, k, np.shape(weights[k])
             sess.run(self.parameters[i].assign(weights[k]))
 
+
 if __name__ == '__main__':
     sess = tf.Session()
     imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
     vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
 
-    #input read
-    #img1 = imread('laska.png', mode='RGB')
-    #img1 = imresize(img1, (224, 224))
+    # input read
+    # img1 = imread('laska.png', mode='RGB')
+    # img1 = imresize(img1, (224, 224))
     from dataset_helper import get_small_oxf17
+
     X, Y, testX, testY = get_small_oxf17(1000)
 
-    #predict and test
+    # predict and test
     prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [X[0]]})[0]
     preds = (np.argsort(prob)[::-1])[0:5]
     for p in preds:
         print class_names[p], prob[p]
-    #print 'Accuracy evaluation for oxflower17'
-    #print("test accuracy %g"%vgg.probs.eval(feed_dict={vgg.imgs: X,}))
+        # print 'Accuracy evaluation for oxflower17'
+        # print("test accuracy %g"%vgg.probs.eval(feed_dict={vgg.imgs: X,}))

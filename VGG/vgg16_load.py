@@ -9,7 +9,6 @@ import os
 
 
 def vgg16(input, num_class):
-
     x = tflearn.conv_2d(input, 8, 3, activation='relu', scope='conv1_1')
     x = tflearn.conv_2d(x, 8, 3, activation='relu', scope='conv1_2')
     x = tflearn.max_pool_2d(x, 2, strides=2, name='maxpool1')
@@ -43,27 +42,37 @@ def vgg16(input, num_class):
 
     return x
 
-#-----------------
-#time cost evaluation
+
+# -----------------
+# time cost evaluation
 from datetime import datetime as dt
-TIME = [] #[t_init,t_final]
+
+TIME = []  # [t_init,t_final]
+
+
 def startCrono():
     TIME.append(dt.now())
-def getCrono(): # returns delta t in seconds
+
+
+def getCrono():  # returns delta t in seconds
     TIME.append(dt.now())
-    deltat = TIME[-1]-TIME[-2]
+    deltat = TIME[-1] - TIME[-2]
     return deltat.seconds
+
+
 def checkDir(directory):
-  if not os.path.exists(directory):
-    os.makedirs(directory)
-#----------------
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+
+# ----------------
 checkDir('checkpoints/vgg16-finetuning')
 checkDir('tensorboard/vgg16_load')
 model_path = "./models/"
 
 from dataset_helper import get_mnist
-X, Y, testX, testY = get_mnist(rgb=True)
 
+X, Y, testX, testY = get_mnist(rgb=True)
 
 NUM_CLASSES = 10
 LEARNING_RATE = 0.0001
@@ -96,5 +105,5 @@ model.save('./models/vgg16-retrained-1')
 print ('Model SAVED!')
 
 # Evaluate accuracy.
-accuracy_score = model.evaluate(testX,testY,batch_size=32)
-print('Accuracy: %s' %accuracy_score)
+accuracy_score = model.evaluate(testX, testY, batch_size=32)
+print('Accuracy: %s' % accuracy_score)
