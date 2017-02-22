@@ -25,11 +25,11 @@ def alexnet(input, num_class, transf_params_encoded=['FT', 'FT', 'FT', 'FT', 'FT
                       trainable=transf_params[1][1])
     network = max_pool_2d(network, 3, strides=2, name='maxpool2')
     network = local_response_normalization(network)
-    network = conv_2d(network, 48, 3, activation='relu', scope='3_1', restore=transf_params[2][0],
+    network = conv_2d(network, 48, 3, activation='relu', scope='conv3_1', restore=transf_params[2][0],
                       trainable=transf_params[2][1])
-    network = conv_2d(network, 48, 3, activation='relu', scope='3_2', restore=transf_params[3][0],
+    network = conv_2d(network, 48, 3, activation='relu', scope='conv3_2', restore=transf_params[3][0],
                       trainable=transf_params[3][1])
-    network = conv_2d(network, 32, 3, activation='relu', scope='3_3', restore=transf_params[4][0],
+    network = conv_2d(network, 32, 3, activation='relu', scope='conv3_3', restore=transf_params[4][0],
                       trainable=transf_params[4][1])
     network = max_pool_2d(network, 3, strides=2, name='maxpool3')
     network = local_response_normalization(network)

@@ -15,7 +15,6 @@ from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.estimator import regression
 from tflearn.layers.normalization import local_response_normalization
 
-# keep_prob = float(sys.argv[4]) # keep_prob \in (0, 1]
 keep_prob = 0.5
 
 
@@ -29,9 +28,9 @@ def build_alexnet(learning_rate, n_class=10):
     network = conv_2d(network, 32, 5, activation='relu', scope='conv2')
     network = max_pool_2d(network, 3, strides=2, name='maxpool2')
     network = local_response_normalization(network)
-    network = conv_2d(network, 48, 3, activation='relu', scope='3_1')
-    network = conv_2d(network, 48, 3, activation='relu', scope='3_2')
-    network = conv_2d(network, 32, 3, activation='relu', scope='3_3')
+    network = conv_2d(network, 48, 3, activation='relu', scope='conv3_1')
+    network = conv_2d(network, 48, 3, activation='relu', scope='conv3_2')
+    network = conv_2d(network, 32, 3, activation='relu', scope='conv3_3')
     network = max_pool_2d(network, 3, strides=2, name='maxpool3')
     network = local_response_normalization(network)
     network = fully_connected(network, 512, activation='tanh', scope='fc1')
