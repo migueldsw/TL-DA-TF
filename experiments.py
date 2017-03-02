@@ -37,7 +37,7 @@ REPORT_LOG_FILE_NAME = 'run.log'
 # -------------------------------------------------
 
 
-## GLOBAL VALUES ----------------------------------------------- 
+## GLOBAL VALUES -----------------------------------------------
 # Datasets loading and preprocessing
 print ("Data loading and preprocessing...")
 # mX, mY, mtestX, mtestY = get_mnist(instances=50,rgb=True)
@@ -204,3 +204,9 @@ for n in range(TRANSFER_EXPERIMENTS):
     call(["sh", "extras/backup.sh", "BKP-TRANSFER-" + str(n)])
 
 sout('END!')
+
+def run_exp(model, epoch, exps):
+    print "Experiments with:"
+    print "Model", model
+    print "Epochs = ", epoch
+    print "Experiments = ", exps
