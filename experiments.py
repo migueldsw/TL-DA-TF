@@ -8,6 +8,8 @@ import tensorflow as tf
 from VGG.vgg import build_vgg16, build_vgg11, train_vgg
 from VGG.model_helper import evaluate_model, train_model, layers_to_transfer
 from VGG.vgg_load import load_vgg, transfer_vgg
+from LENET.lenet import build_lenet
+from LENET.lenet_load import load_lenet, transfer_lenet
 from DATASETS.dataset_helper import get_mnist, get_svhn, get_cifar10
 from report import appendFile, checkDir
 
@@ -40,15 +42,17 @@ REPORT_LOG_FILE_NAME = 'run.log'
 ## GLOBAL VALUES -----------------------------------------------
 # Datasets loading and preprocessing
 print ("Data loading and preprocessing...")
-# mX, mY, mtestX, mtestY = get_mnist(instances=50,rgb=True)
-# sX, sY, stestX, stestY = get_svhn(instances=50,crop=True)
-# cX, cY, ctestX, ctestY = get_cifar10(instances=50,crop=True)
-mX, mY, mtestX, mtestY = get_mnist(rgb=True)
-sX, sY, stestX, stestY = get_svhn(crop=True)
-cX, cY, ctestX, ctestY = get_cifar10(crop=True)
+mX, mY, mtestX, mtestY = get_mnist(instances=50, rgb=True)
+sX, sY, stestX, stestY = mX, mY, mtestX, mtestY
+cX, cY, ctestX, ctestY = mX, mY, mtestX, mtestY
+# sX, sY, stestX, stestY = get_svhn(instances=50, crop=True)
+# cX, cY, ctestX, ctestY = get_cifar10(instances=50, crop=True)
+# mX, mY, mtestX, mtestY = get_mnist(rgb=True)
+# sX, sY, stestX, stestY = get_svhn(crop=True)
+# cX, cY, ctestX, ctestY = get_cifar10(crop=True)
 
-# EPOCHS = 3
-EPOCHS = 50
+EPOCHS = 1
+# EPOCHS = 50
 LEARN_RATE = 0.00001
 
 MODEL_PATH = './models/'
@@ -193,20 +197,32 @@ def EXEC_TRANSFER():
 
 from subprocess import call
 
-BASE_EXPERIMENTS = 10
+BASE_EXPERIMENTS = 0
 for n in range(BASE_EXPERIMENTS):
     EXEC_BASE(str(n))
     call(["sh", "extras/backup.sh", "BKP-BASE-" + str(n)])
 
-TRANSFER_EXPERIMENTS = 10
+TRANSFER_EXPERIMENTS = 0
 for n in range(TRANSFER_EXPERIMENTS):
     EXEC_TRANSFER()
     call(["sh", "extras/backup.sh", "BKP-TRANSFER-" + str(n)])
 
-sout('END!')
+
+def exec_lenet(n):
+    n = str(n)
+    train_exec(build_lenet, mX, mY, mtestX, mtestY, 'LENET_A' + n + '.tfl', "trainLeNet_A" + n)
+
 
 def run_exp(model, epoch, exps):
     print "Experiments with:"
     print "Model", model
     print "Epochs = ", epoch
     print "Experiments = ", exps
+    EPOCHS = int(epoch)
+    for i in range(int(exps)):
+        exec_lenet(i)
+    sout('END!')
+
+print "Loaded!"
+
+

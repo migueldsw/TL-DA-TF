@@ -14,7 +14,9 @@ import os
 keep_prob = 0.5
 
 
-def alexnet(input, num_class, transf_params_encoded=['FT', 'FT', 'FT', 'FT', 'FT', 'FT', 'FT', 'NT']):
+def alexnet(input, num_class, transf_params_encoded=None):
+    if transf_params_encoded is None:
+        transf_params_encoded = ['FT', 'FT', 'FT', 'FT', 'FT', 'FT', 'FT', 'NT']
     transf_params = transfer_params_decode(transf_params_encoded)
 
     network = conv_2d(input, 12, 11, strides=4, activation='relu', scope='conv1', restore=transf_params[0][0],

@@ -13,8 +13,11 @@ import os
 
 keep_prob = 0.8
 
-#Build LeNet
-def lenet(input, num_class, transf_params_encoded=['FT', 'FT', 'FT', 'FT', 'NT']):
+
+# Build LeNet
+def lenet(input, num_class, transf_params_encoded=None):
+    if transf_params_encoded is None:
+        transf_params_encoded = ['FT', 'FT', 'FT', 'FT', 'NT']
     transf_params = transfer_params_decode(transf_params_encoded)
 
     network = conv_2d(input, 32, 3, activation='relu', regularizer="L2", scope='conv1', restore=transf_params[0][0],
@@ -28,20 +31,21 @@ def lenet(input, num_class, transf_params_encoded=['FT', 'FT', 'FT', 'FT', 'NT']
     network = local_response_normalization(network)
 
     network = fully_connected(network, 128, activation='tanh', scope='fc1', restore=transf_params[2][0],
-                      trainable=transf_params[2][1])
+                              trainable=transf_params[2][1])
     network = dropout(network, keep_prob, name='dropout1')
 
     network = fully_connected(network, 256, activation='tanh', scope='fc2', restore=transf_params[3][0],
-                      trainable=transf_params[3][1])
+                              trainable=transf_params[3][1])
     network = dropout(network, keep_prob, name='dropout2')
 
     network = fully_connected(network, num_class, activation='softmax', scope='fct', restore=transf_params[4][0],
-                      trainable=transf_params[4][1])
+                              trainable=transf_params[4][1])
 
     return network
 
+
 def load_lenet(model_path, model_file_name, learning_rate, checkpoint_path, tensorboard_dir,
-                 transf_params_encoded):
+               transf_params_encoded):
     NUM_CLASSES = 10
     # LeNet Network
     input_layer = input_data(shape=[None, 28, 28, 3], name='input')
@@ -59,6 +63,7 @@ def load_lenet(model_path, model_file_name, learning_rate, checkpoint_path, tens
     model.load(model_file, weights_only=True)
     print ('Model loaded!')
     return model
+
 
 def transfer_lenet(model, X, Y, epoch, run_id, save_path_file):
     # Start finetuning
