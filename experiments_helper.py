@@ -30,29 +30,16 @@ def getCrono():  # returns delta t in seconds
 # -------------------------------------------------
 # Datasets loading and preprocessing
 print ("Data loading and preprocessing...")
-mX, mY, mtestX, mtestY = get_mnist(instances=50, rgb=True)
-sX, sY, stestX, stestY = mX, mY, mtestX, mtestY
-cX, cY, ctestX, ctestY = mX, mY, mtestX, mtestY
-
-def load_data(mode=None):
-    if mode == 0:
-        mX, mY, mtestX, mtestY = get_mnist(instances=50, rgb=True)
-        sX, sY, stestX, stestY = mX, mY, mtestX, mtestY
-        cX, cY, ctestX, ctestY = mX, mY, mtestX, mtestY
-    elif mode == 1:
-        mX, mY, mtestX, mtestY = get_mnist(instances=50, rgb=True)
-        sX, sY, stestX, stestY = get_svhn(instances=50, crop=True)
-        cX, cY, ctestX, ctestY = get_cifar10(instances=50, crop=True)
-    elif mode is None:
-        # load all datasets
-        mX, mY, mtestX, mtestY = get_mnist(rgb=True)
-        sX, sY, stestX, stestY = get_svhn(crop=True)
-        cX, cY, ctestX, ctestY = get_cifar10(crop=True)
-# load_data(0)
+# mX, mY, mtestX, mtestY = get_mnist(instances=50, rgb=True)
+# sX, sY, stestX, stestY = mX, mY, mtestX, mtestY
+# cX, cY, ctestX, ctestY = mX, mY, mtestX, mtestY
+mX, mY, mtestX, mtestY = get_mnist(rgb=True)
+sX, sY, stestX, stestY = get_svhn(crop=True)
+cX, cY, ctestX, ctestY = get_cifar10(crop=True)
 
 
-EPOCHS = 1
-# EPOCHS = 50
+# EPOCHS = 1
+EPOCHS = 50
 LEARN_RATE = 0.00001
 
 # MODEL_PATH = './models/'
@@ -196,7 +183,7 @@ def transfer_exec(X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_p
 
 def EXEC_TRANSFER(net_name):
     if net_name == "lenet":
-        layer_index_list = ['1']#['1', '2', '3', '4']
+        layer_index_list = ['1', '2', '3', '4']
     elif net_name == "alexnet":
         layer_index_list = ['1', '2', '3', '4', '5', '6', '7']
     elif net_name == "vgg11":
@@ -204,7 +191,7 @@ def EXEC_TRANSFER(net_name):
     for D in ['A', 'B', 'C']:
         pretrain_transfer(D, net_name)
     for S in ['A', 'B', 'C']:
-        for T in ['A']:#['A', 'B', 'C']:
+        for T in ['A', 'B', 'C']:
             for layer in layer_index_list:
                 for mode in ['+', '-']:
                     transfer(S + layer + mode + T, net_name)
