@@ -101,13 +101,3 @@ def strMat(m):
 def writeMat(fileName, m):
     writeFile(fileName, strMat(m))
 
-    # --- test area ---
-    # x = [0,1,2,3,4,5]
-    # y = [95.858585,57.22,55.5,54.3,54.0,51.82]
-    # y1 = [1,2,3,1,2,1,4,2,3,1,1,1,3,4,1,1,6,2,1,1,7,8,9,0,7]
-
-    # plotLine(x,y,"out","outtest")
-    # plotValuesLine(y,"out","outtestValues")
-    # plotDots(y1,"out","classes")
-
-    # writeFile('out/results.txt',['lorem','ipsum','dolor','sit','amet'])

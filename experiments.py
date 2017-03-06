@@ -30,12 +30,6 @@ def getCrono():  # returns delta t in seconds
     return deltat.seconds
 
 
-# report file writer
-def report_line(line):
-    appendFile(REPORT_LOG_FILE_NAME, [line])
-
-
-REPORT_LOG_FILE_NAME = 'run.log'
 # -------------------------------------------------
 
 
@@ -55,12 +49,31 @@ EPOCHS = 1
 # EPOCHS = 50
 LEARN_RATE = 0.00001
 
-MODEL_PATH = './models/'
-CHECKPOINT_PATH = 'checkpoints/'
-TENSORBOARDDIR = 'tensorboard/'
+# MODEL_PATH = './models/'
+# CHECKPOINT_PATH = 'checkpoints/'
+# TENSORBOARDDIR = 'tensorboard/'
+# sudo mkdir /home/DLEx/
+# sudo chmod 7777 /home/DLEx/
+OUTPUT_PATH = '/home/DLEx'
+MODEL_PATH = OUTPUT_PATH + '/models/'
+CHECKPOINT_PATH = OUTPUT_PATH + '/checkpoints/'
+TENSORBOARDDIR = OUTPUT_PATH + '/tensorboard/'
 checkDir(MODEL_PATH)
 checkDir(CHECKPOINT_PATH)
 checkDir(TENSORBOARDDIR)
+
+
+# # report file writer
+def report_file(line, filename, net_name, ext):
+    file_path = OUTPUT_PATH + '/' + filename + '_' + net_name + '_' + '.' + ext + '.log'
+    appendFile(file_path, [line])
+
+
+def report_line(line):
+    appendFile(REPORT_LOG_FILE_NAME, [line])
+
+
+REPORT_LOG_FILE_NAME = 'run.log'
 
 
 # --------------------------------------------------------------
@@ -76,7 +89,6 @@ def report(RUN_ID, X, testX, t, EPOCHS, LEARN_RATE, acc):
     strs.append('\n')
     for i in strs:
         sout(i)
-
 
 def sout(i):
     print(i)
@@ -103,7 +115,7 @@ def train_exec(build_vgg, X, Y, testX, testY, MODEL_NAME, RUN_ID):
 
 # return model
 
-def transfer_exec(vgg, X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_params_encoded):
+def transfer_exec_vgg(vgg, X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_params_encoded):
     # transfer
     # load model
     startCrono()
@@ -119,6 +131,28 @@ def transfer_exec(vgg, X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, tra
                           EPOCHS / 2,
                           RUN_ID,
                           SAVE_PATH_FILE)
+    t = getCrono()
+    # evaluate model
+    acc = evaluate_model(lmodel, testX, testY)
+    report(RUN_ID, X, testX, t, EPOCHS / 2, LEARN_RATE, acc)
+    tf.reset_default_graph()
+
+
+def transfer_exec(X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_params_encoded):
+    # transfer
+    # load model
+    startCrono()
+    SAVE_PATH_FILE = MODEL_PATH + N_MODEL_NAME
+    lmodel = load_lenet(MODEL_PATH,
+                        MODEL_NAME,
+                        LEARN_RATE,
+                        CHECKPOINT_PATH,
+                        TENSORBOARDDIR,
+                        transf_params_encoded)
+    lmodel = transfer_lenet(lmodel, X, Y,
+                            EPOCHS / 2,
+                            RUN_ID,
+                            SAVE_PATH_FILE)
     t = getCrono()
     # evaluate model
     acc = evaluate_model(lmodel, testX, testY)
@@ -156,7 +190,7 @@ def pretrain_transfer(dataset, build_vgg):
 
 # return model
 
-def transfer(params_str, vgg):  # Dn_D
+def transfer_vgg(params_str, vgg):  # Dn_D
     sourceDataset = params_str[0]
     targetDataset = params_str[-1]
     transferParams = params_str[1:-1]
@@ -169,8 +203,24 @@ def transfer(params_str, vgg):  # Dn_D
         X, Y, testX, testY = cX, cY, ctestX, ctestY
 
     trained_model_name = 'model_' + sourceDataset + '.tfl'
-    transfer_exec(vgg, X, Y, testX, testY, trained_model_name, params_str, params_str + '.tfl',
-                  layers_to_transfer(transferParams, vgg))
+    transfer_exec_vgg(vgg, X, Y, testX, testY, trained_model_name, params_str, params_str + '.tfl',
+                      layers_to_transfer(transferParams, vgg))
+
+
+def transfer(params_str):  # Dn_D
+    sourceDataset = params_str[0]
+    targetDataset = params_str[-1]
+    transferParams = params_str[1:-1]
+
+    if (targetDataset == 'A'):
+        X, Y, testX, testY = mX, mY, mtestX, mtestY
+    elif (targetDataset == 'B'):
+        X, Y, testX, testY = sX, sY, stestX, stestY
+    elif (targetDataset == 'C'):
+        X, Y, testX, testY = cX, cY, ctestX, ctestY
+
+    trained_model_name = 'model_' + sourceDataset + '.tfl'
+    transfer_exec(X, Y, testX, testY, trained_model_name, params_str, params_str + '.tfl', None)
 
 
 def EXEC_BASE(n):
@@ -192,7 +242,7 @@ def EXEC_TRANSFER():
         for T in ['A', 'B', 'C']:
             for layer in ['1', '2', '4', '6', '8', '10']:
                 for mode in ['+', '-']:
-                    transfer(S + layer + mode + T, vgg)
+                    transfer_vgg(S + layer + mode + T, vgg)
 
 
 from subprocess import call
@@ -213,6 +263,11 @@ def exec_lenet(n):
     train_exec(build_lenet, mX, mY, mtestX, mtestY, 'LENET_A' + n + '.tfl', "trainLeNet_A" + n)
 
 
+def exec_transf_lenet():
+    pretrain_transfer("A", build_lenet)
+    transfer("A2+A")
+
+
 def run_exp(model, epoch, exps):
     print "Experiments with:"
     print "Model", model
@@ -220,9 +275,9 @@ def run_exp(model, epoch, exps):
     print "Experiments = ", exps
     EPOCHS = int(epoch)
     for i in range(int(exps)):
-        exec_lenet(i)
+        exec_transf_lenet()
+
     sout('END!')
 
+
 print "Loaded!"
-
-

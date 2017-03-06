@@ -2,7 +2,7 @@
 #
 #
 import sys, getopt
-from experiments import run_exp
+from experiments_helper import run_exp
 
 COMMAND_HELP_STR = 'main.py \n-e <num_experiments [default=1]> \n-m <model_name [vgg, lenet, alexnet]> \n-c <epochs [default=1]>'
 
@@ -31,6 +31,7 @@ def main(argv):
             epochs = arg
 
     #run experiment
+    # python main.py -c 2 -e 1 -m lenet
     run_exp(model_name,epochs,num_experiments)
 
 if __name__ == "__main__":
