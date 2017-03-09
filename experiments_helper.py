@@ -38,8 +38,6 @@ sX, sY, stestX, stestY = get_svhn(crop=True)
 cX, cY, ctestX, ctestY = get_cifar10(crop=True)
 
 
-# EPOCHS = 1
-EPOCHS = 50
 LEARN_RATE = 0.00001
 
 # MODEL_PATH = './models/'
@@ -89,7 +87,7 @@ def sout(i):
 
 
 # --------------------------------------------------------------
-def pretrain_transfer(dataset, net_name):
+def pretrain_transfer(dataset, net_name, epochs):
     MODEL_NAME = 'model_' + dataset + '.tfl'
     RUN_ID = 'pretrain_' + dataset
 
@@ -111,7 +109,7 @@ def pretrain_transfer(dataset, net_name):
     SAVE_PATH_FILE = MODEL_PATH + MODEL_NAME
     net = build_net(LEARN_RATE)
     model = train_model(net, X, Y,
-                        EPOCHS / 2,
+                        epochs / 2,
                         SAVE_PATH_FILE,
                         RUN_ID,
                         CHECKPOINT_PATH,
@@ -121,11 +119,11 @@ def pretrain_transfer(dataset, net_name):
     acc = evaluate_model(model, testX, testY)
     report_file(acc, RUN_ID, net_name, 'acc')
     report_file(t, RUN_ID, net_name, 'time')
-    report_log(RUN_ID, X, testX, t, EPOCHS / 2, LEARN_RATE, acc)
+    report_log(RUN_ID, X, testX, t, epochs / 2, LEARN_RATE, acc)
     tf.reset_default_graph()
 
 
-def transfer(params_str, net_name):  # Dn_D
+def transfer(params_str, net_name, epochs):  # Dn_D
     sourceDataset = params_str[0]
     targetDataset = params_str[-1]
     transferParams = params_str[1:-1]
@@ -146,10 +144,10 @@ def transfer(params_str, net_name):  # Dn_D
 
     trained_model_name = 'model_' + sourceDataset + '.tfl'
     transfer_exec(X, Y, testX, testY, trained_model_name, params_str, params_str + '.tfl',
-                  layers_to_transfer(transferParams, net_num_layers), net_name)
+                  layers_to_transfer(transferParams, net_num_layers), net_name, epochs)
 
 
-def transfer_exec(X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_params_encoded, net_name):
+def transfer_exec(X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_params_encoded, net_name, epochs):
     # transfer
     # load model
     startCrono()
@@ -169,7 +167,7 @@ def transfer_exec(X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_p
                         TENSORBOARDDIR,
                         transf_params_encoded)
     lmodel = transfer_model(lmodel, X, Y,
-                            EPOCHS / 2,
+                            epochs / 2,
                             RUN_ID,
                             SAVE_PATH_FILE)
     t = getCrono()
@@ -177,11 +175,11 @@ def transfer_exec(X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_p
     acc = evaluate_model(lmodel, testX, testY)
     report_file(acc, RUN_ID, net_name, 'acc')
     report_file(t, RUN_ID, net_name, 'time')
-    report_log(RUN_ID, X, testX, t, EPOCHS / 2, LEARN_RATE, acc)
+    report_log(RUN_ID, X, testX, t, epochs / 2, LEARN_RATE, acc)
     tf.reset_default_graph()
 
 
-def EXEC_TRANSFER(net_name):
+def EXEC_TRANSFER(net_name, epochs):
     if net_name == "lenet":
         layer_index_list = ['1', '2', '3', '4']
     elif net_name == "alexnet":
@@ -189,21 +187,19 @@ def EXEC_TRANSFER(net_name):
     elif net_name == "vgg11":
         layer_index_list = ['1', '2', '4', '6', '8', '10']
     for D in ['A', 'B', 'C']:
-        pretrain_transfer(D, net_name)
+        pretrain_transfer(D, net_name, epochs)
     for S in ['A', 'B', 'C']:
         for T in ['A', 'B', 'C']:
             for layer in layer_index_list:
                 for mode in ['+', '-']:
-                    transfer(S + layer + mode + T, net_name)
+                    transfer(S + layer + mode + T, net_name, epochs)
 
 
-def run_exp(model, epoch, exps):
+def run_exp(model, epochs, exps):
     print "Experiments with:"
     print "Model", model
-    print "Epochs = ", epoch
+    print "Epochs = ", epochs
     print "Experiments = ", exps
-    EPOCHS = int(epoch)
     for i in range(int(exps)):
-        EXEC_TRANSFER(model)
-
+        EXEC_TRANSFER(model, int(epochs))
     sout('END!')
