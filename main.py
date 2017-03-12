@@ -31,7 +31,7 @@ def main(argv):
             epochs = arg
 
     #run experiment
-    # python main.py -c 2 -e 1 -m lenet
+    # nohup python main.py -c 50 -e 3 -m alexnet > ~/exec1.log &
     run_exp(model_name,epochs,num_experiments)
 
 if __name__ == "__main__":
