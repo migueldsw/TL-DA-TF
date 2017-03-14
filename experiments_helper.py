@@ -60,6 +60,21 @@ def report_file(line, filename, net_name, ext):
     file_path = OUTPUT_PATH + '/' + net_name + '/' + filename + '.' + ext + '.log'
     appendFile(file_path, [line])
 
+# report_progress.max = number_of_experiments
+# report_progress.file_name = get_time_str()
+def report_progress(exec_name):
+    report_progress.max -= 1
+    status = str(report_progress.max) + " pending..."
+    if report_progress.max == 0:
+        status = 'ALL DONE!'
+    print '%s (%s)'%(exec_name,status)
+    file_path = OUTPUT_PATH + '/progress_' + report_progress.file_name + '.log'
+    appendFile(file_path, [exec_name + ' | ' +status])
+
+
+def get_time_str():
+    return dt.datetime.now().strftime("%Hh%M-%d%m%Y")
+
 
 def report_log_line(line):
     appendFile(REPORT_LOG_FILE_NAME, [line])
@@ -186,13 +201,20 @@ def EXEC_TRANSFER(net_name, epochs):
         layer_index_list = ['1', '2', '3', '4', '5', '6', '7']
     elif net_name == "vgg11":
         layer_index_list = ['1', '2', '4', '6', '8', '10']
+    #report progress init
+    num_execs = len(layer_index_list)*3*3*2 + 3
+    report_progress.file_name = get_time_str()
+    report_progress.max = num_execs
+    #
     for D in ['A', 'B', 'C']:
         pretrain_transfer(D, net_name, epochs)
+        report_progress('pre_train_'+D)
     for S in ['A', 'B', 'C']:
         for T in ['A', 'B', 'C']:
             for layer in layer_index_list:
                 for mode in ['+', '-']:
                     transfer(S + layer + mode + T, net_name, epochs)
+                    report_progress(S + layer + mode + T)
 
 
 def run_exp(model, epochs, exps):

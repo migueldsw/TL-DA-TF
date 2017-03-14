@@ -7,20 +7,20 @@ import os
 
 def rewrite_docs(docs_dir):
     file_list = os.listdir(docs_dir)
-    for file in file_list:
-        lines = [line.rstrip('\n') for line in open(docs_dir + file)]
-        rewrite_file(docs_dir + file, lines)
-    return file_list
+    for f in file_list:
+        lines = [line.rstrip('\n') for line in open(docs_dir + f)]
+        rewrite_file(docs_dir + f, lines)
+    print '%d files modified.' % len(file_list)
 
 
 def rewrite_file(file_name_path, lines):
-    file = open(file_name_path, 'w')
+    f = open(file_name_path, 'w')
     for line in lines:
         if (line[0] == '[') and (line[-1] == ']'):
             line_temp = line[1:-1]
-            file.write(line_temp + '\n')
+            f.write(line_temp + '\n')
         else:
-            file.write(line + '\n')
+            f.write(line + '\n')
 
 
 def generate_csv(docs_dir, output_path, output_file_prefix):
@@ -29,14 +29,14 @@ def generate_csv(docs_dir, output_path, output_file_prefix):
     file_list = os.listdir(docs_dir)
     array_file_acc_data = []
     array_file_time_data = []
-    for file in file_list:
-        data_array = [extract_file_name(file)]
-        lines = [line.rstrip('\n') for line in open(docs_dir + file)]
+    for f in file_list:
+        data_array = [extract_file_name(f)]
+        lines = [line.rstrip('\n') for line in open(docs_dir + f)]
         for line in lines:
             data_array.append(line)
-        if (file[-8:-4] == '.acc'):
+        if f[-8:-4] == '.acc':
             array_file_acc_data.append(data_array)
-        elif (file[-8:-4] == 'time'):
+        elif f[-8:-4] == 'time':
             array_file_time_data.append(data_array)
 
     for array, out_file in [(array_file_acc_data, acc_file), (array_file_time_data, time_file)]:
@@ -53,7 +53,7 @@ def generate_csv(docs_dir, output_path, output_file_prefix):
                 else:
                     val = array[j][i]
                 if j == len(array) - 1:
-                    csv_line += (val)
+                    csv_line += val
                 else:
                     csv_line += (val + ',')
             out_csv_lines.append(csv_line)
@@ -62,5 +62,5 @@ def generate_csv(docs_dir, output_path, output_file_prefix):
     print 'DONE'
 
 
-def extract_file_name(file):  # 'file.ext1.ext2'
-    return file[0:file.index('.')]
+def extract_file_name(file_name):  # 'file.ext1.ext2'
+    return file_name[0:file_name.index('.')]
