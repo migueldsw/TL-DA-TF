@@ -64,3 +64,12 @@ def generate_csv(docs_dir, output_path, output_file_prefix):
 
 def extract_file_name(file_name):  # 'file.ext1.ext2'
     return file_name[0:file_name.index('.')]
+
+
+def cfl(docs_dir):#count files lines
+    file_list = os.listdir(docs_dir)
+    lines_count_list = []
+    for f in file_list:
+        lines = [line.rstrip('\n') for line in open(docs_dir + f)]
+        lines_count_list.append(len(lines))
+    print '%d files, avg lines= %f, (min,max)=(%d,%d)' % (len(file_list), float(sum(lines_count_list))/len(lines_count_list),min(lines_count_list),max(lines_count_list))
