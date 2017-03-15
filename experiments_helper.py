@@ -8,7 +8,7 @@ from NETWORKS.lenet import build_lenet, lenet
 from NETWORKS.alexnet import build_alexnet, alexnet
 from NETWORKS.model_helper import evaluate_model, train_model, layers_to_transfer, load_model, transfer_model
 from DATASETS.dataset_helper import get_mnist, get_svhn, get_cifar10
-from report import appendFile, checkDir
+from report_helper import appendFile, checkDir
 
 # UTILS------------------------------------------
 # time cost evaluation

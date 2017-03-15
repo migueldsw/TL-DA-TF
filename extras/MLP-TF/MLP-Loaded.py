@@ -1,21 +1,11 @@
 #################
-##MLP in TensorFlow
+##LOADED MLP-TF
+##from a saved model
+
+
 from __future__ import print_function
 
-import os
-
-
-def checkDir(directory):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-
-checkDir('./data')
-checkDir('./out')
-checkDir('./save')
-
 # Import MNIST data
-print("Download MNIST dataset...")
 from tensorflow.examples.tutorials.mnist import input_data
 
 mnist = input_data.read_data_sets("./data/", one_hot=True)
@@ -39,7 +29,7 @@ x = tf.placeholder("float", [None, n_input])
 y = tf.placeholder("float", [None, n_classes])
 
 
-# Create MLP model
+# Create MLP-TF model
 def MLP(x, weights, biases):
     # 1st Hidden layer with RELU activation
     layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
@@ -71,15 +61,19 @@ pred = MLP(x, weights, biases)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
-# Initializing the variables
-init = tf.initialize_all_variables()
+# REMOVE# Initializing the variables
+# REMOVE#init = tf.initialize_all_variables()
 
-# 'saver' to save (and load) all the variables
+# 'saver' to load all the variables
 saver = tf.train.Saver()
 
 # Launch the graph
 with tf.Session() as sess:
-    sess.run(init)
+    # REMOVE#sess.run(init)
+
+    # Load variables from disk
+    saver.restore(sess, "./save/MLP-TF.ckpt")
+    print("MLP-TF Loaded!")
 
     # Training cycle
     for epoch in range(training_epochs):
@@ -98,10 +92,6 @@ with tf.Session() as sess:
             print("Epoch:", '%04d' % (epoch + 1), "cost=", \
                   "{:.9f}".format(avg_cost))
     print("Optimization Finished!")
-
-    # Save the variables to disk
-    save_path = saver.save(sess, "./save/MLP.ckpt")
-    print("MLP saved in file: %s" % save_path)
 
     # Test model
     correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))

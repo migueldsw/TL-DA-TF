@@ -17,17 +17,19 @@ from tflearn.layers.estimator import regression
 from tflearn.layers.normalization import local_response_normalization
 
 keep_prob = 0.8
+# regularizer = "L2"
+regularizer = None
 
 
 # Build LeNet-5
 def build_lenet(learning_rate, n_classes=10):
     network = input_data(shape=[None, 28, 28, 3], name='input')
 
-    network = conv_2d(network, 32, 3, activation='relu', regularizer="L2", scope='conv1')
+    network = conv_2d(network, 32, 3, activation='relu', regularizer=regularizer, scope='conv1')
     network = max_pool_2d(network, 2, name='maxpool1')
     network = local_response_normalization(network)
 
-    network = conv_2d(network, 64, 3, activation='relu', regularizer="L2", scope='conv2')
+    network = conv_2d(network, 64, 3, activation='relu', regularizer=regularizer, scope='conv2')
     network = max_pool_2d(network, 2, name='maxpool2')
     network = local_response_normalization(network)
 
@@ -39,8 +41,11 @@ def build_lenet(learning_rate, n_classes=10):
 
     network = fully_connected(network, n_classes, activation='softmax', scope='fct')
 
-    network = regression(network, optimizer='adam', learning_rate=learning_rate,
-                         loss='categorical_crossentropy', name='target')
+    network = regression(network,
+                         optimizer='rmsprop',
+                         learning_rate=learning_rate,
+                         loss='categorical_crossentropy',
+                         name='target')
 
     return network
 
@@ -50,12 +55,12 @@ def lenet(input, num_class, transf_params_encoded=None):
         transf_params_encoded = define_layers(5)
     transf_params = transfer_params_decode(transf_params_encoded)
 
-    network = conv_2d(input, 32, 3, activation='relu', regularizer="L2", scope='conv1', restore=transf_params[0][0],
+    network = conv_2d(input, 32, 3, activation='relu', regularizer=regularizer, scope='conv1', restore=transf_params[0][0],
                       trainable=transf_params[0][1])
     network = max_pool_2d(network, 2, name='maxpool1')
     network = local_response_normalization(network)
 
-    network = conv_2d(network, 64, 3, activation='relu', regularizer="L2", scope='conv2', restore=transf_params[1][0],
+    network = conv_2d(network, 64, 3, activation='relu', regularizer=regularizer, scope='conv2', restore=transf_params[1][0],
                       trainable=transf_params[1][1])
     network = max_pool_2d(network, 2, name='maxpool2')
     network = local_response_normalization(network)

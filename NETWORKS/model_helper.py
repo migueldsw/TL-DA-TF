@@ -8,34 +8,14 @@ from tflearn.layers.estimator import regression
 import os
 
 
-def train_model(network, X, Y, epochs, save_path_file, runId, checkpt_path, tensorboard_dir):
-    # Training the model
-    print("Training Model...")
-    model = tflearn.DNN(network,
-                        checkpoint_path=checkpt_path,
-                        max_checkpoints=3,
-                        tensorboard_verbose=0,
-                        tensorboard_dir=tensorboard_dir)
-    model.fit(X, Y,
-              n_epoch=epochs,
-              shuffle=True,
-              show_metric=True,
-              batch_size=32,
-              snapshot_epoch=True,
-              run_id=runId,
-              validation_set=0.0)
-    # Save the model
-    model.save(save_path_file)
-    print('Model SAVED!')
-    return model
-
 
 def load_model(network_builder, model_path, model_file_name, learning_rate, checkpoint_path, tensorboard_dir,
                transf_params_encoded):
-    NUM_CLASSES = 10
+    num_classes = 10
     input_layer = input_data(shape=[None, 28, 28, 3], name='input')
-    softmax = network_builder(input_layer, NUM_CLASSES, transf_params_encoded)
-    regress_l = regression(softmax, optimizer='rmsprop',
+    softmax = network_builder(input_layer, num_classes, transf_params_encoded)
+    regress_l = regression(softmax,
+                           optimizer='rmsprop',
                            loss='categorical_crossentropy',
                            learning_rate=learning_rate,
                            restore=False)
