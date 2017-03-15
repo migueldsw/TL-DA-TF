@@ -73,7 +73,7 @@ def report_progress(exec_name):
 
 
 def get_time_str():
-    return dt.datetime.now().strftime("%Hh%M-%d%m%Y")
+    return dt.now().strftime("%Hh%M-%d%m%Y")
 
 
 def report_log_line(line):
