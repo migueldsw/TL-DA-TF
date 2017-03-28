@@ -143,8 +143,7 @@ def vgg11(input, num_class, transf_params_encoded=None):
     return network
 
 
-def vgg16(input, num_class,
-          transf_params_encoded=None):
+def vgg16(input, num_class, transf_params_encoded=None):
     if transf_params_encoded is None:
         transf_params_encoded = define_layers(16)
     transf_params = transfer_params_decode(transf_params_encoded)

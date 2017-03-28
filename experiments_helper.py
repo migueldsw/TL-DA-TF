@@ -3,7 +3,7 @@
 #
 
 import tensorflow as tf
-from NETWORKS.vgg import build_vgg11, vgg11
+from NETWORKS.vgg import build_vgg11, vgg11, build_vgg16, vgg16
 from NETWORKS.lenet import build_lenet, lenet
 from NETWORKS.alexnet import build_alexnet, alexnet
 from NETWORKS.model_helper import evaluate_model, train_model, layers_to_transfer, load_model, transfer_model
@@ -112,6 +112,8 @@ def pretrain_transfer(dataset, net_name, epochs):
         build_net = build_alexnet
     elif net_name == "vgg11":
         build_net = build_vgg11
+    elif net_name == "vgg16":
+        build_net = build_vgg16
 
     if dataset == 'A':
         X, Y, testX, testY = mX, mY, mtestX, mtestY
@@ -149,6 +151,8 @@ def transfer(params_str, net_name, epochs):  # Dn_D
         net_num_layers = 8
     elif net_name == "vgg11":
         net_num_layers = 11
+    elif net_name == "vgg16":
+        net_num_layers = 16
 
     if (targetDataset == 'A'):
         X, Y, testX, testY = mX, mY, mtestX, mtestY
@@ -173,6 +177,8 @@ def transfer_exec(X, Y, testX, testY, MODEL_NAME, RUN_ID, N_MODEL_NAME, transf_p
         net_builder = alexnet
     elif net_name == "vgg11":
         net_builder = vgg11
+    elif net_name == "vgg16":
+        net_builder = vgg16
 
     lmodel = load_model(net_builder,
                         MODEL_PATH,
@@ -201,6 +207,8 @@ def EXEC_TRANSFER(net_name, epochs):
         layer_index_list = ['1', '2', '3', '4', '5', '6', '7']
     elif net_name == "vgg11":
         layer_index_list = ['1', '2', '4', '6', '8', '10']
+    elif net_name == "vgg16":
+        layer_index_list = ['2', '4', '7', '10', '13', '15']
     #report progress init
     num_execs = len(layer_index_list)*3*3*2 + 3
     report_progress.file_name = get_time_str()

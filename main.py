@@ -4,7 +4,7 @@
 import sys, getopt
 from experiments_helper import run_exp
 
-COMMAND_HELP_STR = 'main.py \n-e <num_experiments [default=1]> \n-m <model_name [vgg, lenet, alexnet]> \n-c <epochs [default=1]>'
+COMMAND_HELP_STR = 'main.py \n-e <num_experiments [default=1]> \n-m <model_name [vgg11, vgg16, lenet, alexnet]> \n-c <epochs [default=1]>'
 
 def main(argv):
     num_experiments = '1'  # default
